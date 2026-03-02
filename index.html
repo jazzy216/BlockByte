@@ -1,52 +1,19 @@
-<!doctype html>
-<html lang="en" data-theme="blockbyte">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>BlockByte Academy</title>
-    <meta name="description" content="Kid-safe IT + Python + Bash learning quests. Local-only progress." />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <a class="skip" href="#app">Skip to content</a>
-
-    <header class="topbar">
-      <div class="topbar__left">
-        <div class="logo" aria-label="BlockByte Academy">
-          <span class="logo__cube" aria-hidden="true"></span>
-          <span class="logo__text">BlockByte Academy</span>
-        </div>
-        <nav class="nav" aria-label="Primary">
-          <a class="nav__link" href="#/">Home</a>
-          <a class="nav__link" href="#/dashboard">Dashboard</a>
-          <a class="nav__link" href="#/playground/terminal">Terminal</a>
-          <a class="nav__link" href="#/playground/python">Python</a>
-          <a class="nav__link" href="#/parents">Parent/Teacher</a>
-        </nav>
-      </div>
-
-      <div class="topbar__right">
-        <button class="btn btn--ghost" data-action="toggleAgeMode" type="button" aria-label="Switch age mode">
-          <span class="chip" id="ageChip">Explorer 8–11</span>
-        </button>
-        <div class="hud" aria-label="Player stats">
-          <div class="hud__level" id="hudLevel">Lv 1</div>
-          <div class="hud__xp" id="hudXp">0 XP</div>
-        </div>
-      </div>
-    </header>
-
-    <main id="app" class="app" tabindex="-1"></main>
-
-    <div class="toasts" id="toasts" aria-live="polite" aria-atomic="true"></div>
-
-    <footer class="footer">
-      <div class="footer__safe">
-        Kid-safe by design: no chat, no accounts, no public profiles. Progress stays on this device.
-      </div>
-      <button class="btn btn--ghost" data-action="resetAll" type="button">Reset Local Progress</button>
-    </footer>
-
-    <script type="module" src="./app.js"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlockByte Academy</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h1>BlockByte Academy</h1>
+    <div id="xp-bar">XP: <span id="xp-count">0</span></div>
+  </header>
+  <main id="app-root">
+    </main>
+  <script type="module" src="app.js"></script>
+</body>
 </html>
