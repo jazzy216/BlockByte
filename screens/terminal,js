@@ -1,134 +1,43 @@
-export function renderTerminal(mount, api) {
-  const { state } = api;
-  const age = state.ageMode;
+import { State } from '../app.js';
 
-  const goals = [
-    { id: "t1", title: "Show your location", goal: "pwd", ok: "/home/player (simulated)" },
-    { id: "t2", title: "List files", goal: "ls", ok: "quests  treasure  notes.txt (simulated)" },
-    { id: "t3", title: "Enter a folder", goal: "cd treasure", ok: "Entered: treasure (simulated)" }
-  ];
-
-  mount.innerHTML = `
-    <section class="grid grid--2">
-      <div class="card">
-        <h1 class="card__title">Bash Terminal Trainer</h1>
-        <p class="card__muted">${
-          age === "8-11"
-            ? "This is a safe pretend terminal. You can’t break anything here."
-            : "Simulated shell trainer. Commands are validated for learning."
-        }</p>
-        <div class="stack">
-          <div class="pill">Output is labeled: simulated</div>
-          <div class="pill">Goal: type the exact command for the current mission</div>
-        </div>
-
-        <hr class="sep" />
-        <div class="stack">
-          ${goals.map((g, i) => `
-            <div class="card card--flat">
-              <div class="row">
-                <strong>Mission ${i + 1}: ${escapeHtml(g.title)}</strong>
-                <span class="pill">Goal: <span style="font-family:var(--mono)">${escapeHtml(g.goal)}</span></span>
-              </div>
-              <div class="card__muted" style="margin-top:8px">${missionHint(age, g.goal)}</div>
-            </div>
-          `).join("")}
-        </div>
+export function renderTerminal(root) {
+  root.innerHTML = `
+    <div class="card" style="background:var(--color-terminal); color:white; font-family:var(--font-code); border-color: #555;">
+      <h2 style="color:var(--color-primary); font-family:var(--font-heading);">Bash Trainer</h2>
+      <p>Quest: Use <span style="color:var(--color-secondary);">ls</span> to look around.</p>
+      
+      <div id="output" style="margin-bottom: 10px; white-space: pre-line;"></div>
+      
+      <div style="display:flex; align-items:center;">
+        <span style="color:var(--color-primary); margin-right:10px;">player@blockbyte:~$</span>
+        <input type="text" id="bash-input" autocomplete="off" style="flex:1; background:transparent; border:none; color:white; font-family:var(--font-code); outline:none; font-size:16px;">
       </div>
-
-      <div class="card">
-        <h2 class="card__title">Terminal</h2>
-        <div class="terminal" aria-label="Terminal sandbox (simulated)">
-          <div class="terminal__log" id="tlog">Welcome to BlockByte Shell (simulated)\nType a mission command to earn XP.</div>
-          <div class="terminal__row">
-            <span class="terminal__prompt">$</span>
-            <input class="terminal__input" id="tinput" placeholder="${escapeAttr(age === "8-11" ? "Try: pwd" : "Try: pwd (exact)")}"/>
-            <button class="btn btn--primary" id="tsend" type="button">Send</button>
-          </div>
-          <div class="row" style="margin-top:10px; justify-content:flex-start; gap:10px; flex-wrap:wrap">
-            ${quickCmds(age).map(c => `<button class="btn btn--secondary" type="button" data-cmd="${escapeAttr(c)}">${escapeHtml(c)}</button>`).join("")}
-          </div>
-        </div>
-
-        <div class="card__muted" id="tstatus" style="margin-top:12px"></div>
-      </div>
-    </section>
+    </div>
+    <br>
+    <a href="#/dashboard" style="color:var(--color-text);">Back to Dashboard</a>
   `;
 
-  const log = mount.querySelector("#tlog");
-  const input = mount.querySelector("#tinput");
-  const status = mount.querySelector("#tstatus");
+  const input = document.getElementById('bash-input');
+  const output = document.getElementById('output');
 
-  mount.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-cmd]");
-    if (!btn) return;
-    input.value = btn.dataset.cmd;
-    input.focus();
-  });
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      const cmd = input.value.trim();
+      let response = '';
+      
+      if (cmd === 'ls') {
+        response = "Documents/  Downloads/  treasure.txt";
+        State.addXP(10);
+      } else if (cmd === 'pwd') {
+        response = "/home/player/caves";
+      } else if (cmd === '') {
+        response = "";
+      } else {
+        response = `bash: ${cmd}: command not found`;
+      }
 
-  mount.querySelector("#tsend").addEventListener("click", () => run());
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") run();
-  });
-
-  function run() {
-    const cmd = normalize(input.value);
-    if (!cmd) return;
-
-    const match = goals.find(g => normalize(g.goal) === cmd);
-
-    log.textContent += `\n$ ${cmd}`;
-
-    if (match) {
-      log.textContent += `\n${match.ok}`;
-      status.textContent = age === "8-11"
-        ? "✅ Nice! Mission complete."
-        : "✅ Correct. Mission complete.";
-      api.awardXP(10, "Terminal mission");
-      if (cmd.startsWith("cd ")) api.earnBadge("folder_finder", "Folder Finder");
-    } else {
-      log.textContent += `\nCommand not accepted for missions (simulated).`;
-      status.textContent = age === "8-11"
-        ? "❌ Try again. Tip: use the mission goal exactly."
-        : "❌ Not matched. Use exact goal commands (trainer mode).";
+      output.innerHTML += `\n<span style="color:var(--color-primary);">player@blockbyte:~$</span> ${cmd}\n${response}`;
+      input.value = '';
     }
-
-    input.value = "";
-    // keep scroll at bottom if it grows
-  }
-}
-
-function quickCmds(age) {
-  return age === "8-11" ? ["pwd", "ls", "cd treasure"] : ["pwd", "ls", "ls -la", "cd ..", "cd treasure"];
-}
-
-function missionHint(age, goal) {
-  const h = {
-    "pwd": {
-      "8-11": "It tells you your spot on the map.",
-      "12-16": "Print current working directory."
-    },
-    "ls": {
-      "8-11": "It shows what items are in the folder.",
-      "12-16": "List directory contents."
-    },
-    "cd treasure": {
-      "8-11": "It moves you into the treasure folder.",
-      "12-16": "Change directory into the treasure folder."
-    }
-  };
-  return h?.[goal]?.[age] || "Try the goal command.";
-}
-
-function normalize(s) {
-  return String(s).trim().replace(/\s+/g, " ");
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
-}
-function escapeAttr(s) {
-  return escapeHtml(s).replace(/"/g, "&quot;");
+  });
 }
