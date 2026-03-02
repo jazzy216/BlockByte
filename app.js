@@ -1,7 +1,3 @@
-import { renderDashboard } from "./screens/dashboard.js";
-import { renderLesson } from "./screens/lesson.js";
-import { renderTerminal } from "./screens/terminal.js";
-
 const APP_KEY = "blockbyte.v1";
 const appEl = document.getElementById("app");
 const toastsEl = document.getElementById("toasts");
@@ -379,4 +375,93 @@ function notFoundScreen() {
       <a class="btn btn--primary" href="#/dashboard">Go to Dashboard</a>
     </div>
   `;
+}
+// --- Inline screens (no imports needed) ---
+function renderDashboard(mount, api) {
+  mount.innerHTML = `
+    <section class="grid grid--2">
+      <div class="card">
+        <h1 class="card__title">Dashboard</h1>
+        <p class="card__muted">Pick a quest to start earning XP.</p>
+        <div class="row" style="flex-wrap:wrap; justify-content:flex-start; gap:10px">
+          <a class="btn btn--secondary" href="#/lesson/it/it_parts_1">IT Quest</a>
+          <a class="btn btn--secondary" href="#/lesson/bash/sh_nav_1">Bash Quest</a>
+          <a class="btn btn--secondary" href="#/lesson/py/py_vars_1">Python Quest</a>
+        </div>
+      </div>
+      <div class="card">
+        <h2 class="card__title">Your stats</h2>
+        <div class="pill">Level: ${api.state.level}</div>
+        <div class="pill" style="margin-top:10px">XP: ${api.state.xp}</div>
+      </div>
+    </section>
+  `;
+}
+
+function renderLesson(mount, api) {
+  const { track, lessonId, state } = api;
+  const age = state.ageMode;
+
+  const title =
+    track === "it" ? "Meet the Computer Crew" :
+    track === "bash" ? "Terminal Ninja Moves" :
+    "Print & Variables";
+
+  mount.innerHTML = `
+    <section class="card">
+      <div class="row">
+        <div class="pill">${track.toUpperCase()}</div>
+        <div class="pill">${age === "8-11" ? "Explorer" : "Builder"} Mode</div>
+      </div>
+      <h1 class="card__title" style="margin-top:10px">${title} (${lessonId})</h1>
+      <p class="card__muted">This is a minimal inline lesson. If you see this, routing works.</p>
+
+      <hr class="sep" />
+      <button class="btn btn--primary" type="button" id="finishBtn">Finish Quest (+30 XP)</button>
+      <a class="btn btn--ghost" href="#/dashboard" style="margin-left:10px">Back</a>
+    </section>
+  `;
+
+  mount.querySelector("#finishBtn").addEventListener("click", () => {
+    api.awardXP(30, "Quest complete");
+    api.navigate("/dashboard");
+  });
+}
+
+function renderTerminal(mount, api) {
+  mount.innerHTML = `
+    <section class="grid grid--2">
+      <div class="card">
+        <h1 class="card__title">Terminal Trainer</h1>
+        <p class="card__muted">Type <span style="font-family:var(--mono)">pwd</span> to earn XP (simulated).</p>
+      </div>
+      <div class="card">
+        <div class="terminal">
+          <div class="terminal__log" id="tlog">Simulated terminal ready.</div>
+          <div class="terminal__row">
+            <span class="terminal__prompt">$</span>
+            <input class="terminal__input" id="tinput" placeholder="Try: pwd" />
+            <button class="btn btn--primary" id="tsend" type="button">Send</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+
+  const log = mount.querySelector("#tlog");
+  const input = mount.querySelector("#tinput");
+  mount.querySelector("#tsend").addEventListener("click", () => run());
+  input.addEventListener("keydown", (e) => e.key === "Enter" && run());
+
+  function run() {
+    const cmd = (input.value || "").trim();
+    log.textContent += `\n$ ${cmd}`;
+    if (cmd === "pwd") {
+      log.textContent += `\n/home/player (simulated)`;
+      api.awardXP(10, "Terminal mission");
+    } else {
+      log.textContent += `\nCommand not accepted in trainer mode.`;
+    }
+    input.value = "";
+  }
 }
