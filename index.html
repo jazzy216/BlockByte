@@ -1,19 +1,2551 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BlockByte Academy</title>
-  <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BlockByte Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════════════════════
+   BLOCKBYTE ACADEMY — REDESIGNED
+   Aesthetic: Neon-Drenched Pixel World — like a retro arcade
+   game crossed with a modern mobile RPG
+═══════════════════════════════════════════════════════════ */
+
+:root {
+  --ink:      #0a0b14;
+  --ink2:     #11131f;
+  --ink3:     #181b2e;
+  --ink4:     #222540;
+  --ink5:     #2d3155;
+
+  --lime:     #a8ff3e;
+  --lime-d:   #6bb520;
+  --lime-glow: 0 0 30px rgba(168,255,62,0.5);
+
+  --cyan:     #00e5ff;
+  --cyan-d:   #00acc1;
+  --cyan-glow: 0 0 30px rgba(0,229,255,0.45);
+
+  --gold:     #ffd93d;
+  --gold-d:   #d4a000;
+  --gold-glow: 0 0 30px rgba(255,217,61,0.55);
+
+  --pink:     #ff6b9d;
+  --pink-d:   #c2185b;
+  --pink-glow: 0 0 30px rgba(255,107,157,0.45);
+
+  --violet:   #a78bfa;
+  --orange:   #ff9500;
+  --red:      #ff4757;
+  --green:    #2ed573;
+
+  --text1: #f0f2ff;
+  --text2: #9aa3cc;
+  --text3: #5a6494;
+
+  --r-sm:  8px;
+  --r-md:  14px;
+  --r-lg:  22px;
+  --r-xl:  30px;
+  --r-pill: 9999px;
+
+  --font-display: 'Fredoka One', cursive;
+  --font-body:    'Nunito', sans-serif;
+  --font-code:    'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--ink);
+  color: var(--text1);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* Animated starfield background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(168,255,62,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 80%, rgba(0,229,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 50% 40%, rgba(255,217,61,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 10%, rgba(255,107,157,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 60%, rgba(167,139,250,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 20% 50%, rgba(168,255,62,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 65% 75%, rgba(0,229,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 35%, rgba(255,107,157,0.2) 0%, transparent 100%);
+  background-size: 400px 400px;
+  animation: drift 60s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 800px 600px at 0% 0%, rgba(168,255,62,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 800px at 100% 100%, rgba(0,229,255,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 400px at 50% 50%, rgba(167,139,250,0.03) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes drift {
+  0% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+  100% { background-position: 400px 400px, -400px 200px, 200px -400px, -200px 400px, 400px -200px, -300px 300px, 300px 100px, -100px -300px; }
+}
+
+#app { position: relative; z-index: 1; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--ink2); }
+::-webkit-scrollbar-thumb { background: var(--ink5); border-radius: 3px; }
+
+/* ── FOCUS ── */
+*:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; border-radius: 4px; }
+
+/* ══════════════════════════════════════════
+   TOPNAV
+══════════════════════════════════════════ */
+.topnav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  background: rgba(10,11,20,0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(168,255,62,0.12);
+  padding: 0 clamp(16px, 4vw, 40px);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.nav-logo-icon {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, var(--lime), var(--cyan));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: var(--lime-glow);
+  flex-shrink: 0;
+}
+
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--lime);
+  text-shadow: 0 0 20px rgba(168,255,62,0.5);
+  line-height: 1;
+}
+.nav-logo-sub {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.nav-xp {
+  flex: 1;
+  max-width: 360px;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--r-pill);
+  padding: 6px 14px;
+}
+
+.nav-level {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--gold);
+  white-space: nowrap;
+  text-shadow: 0 0 10px rgba(255,217,61,0.6);
+}
+
+.xp-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+
+.xp-fill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--gold-d), var(--gold), #ffe88a);
+  transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 0 10px rgba(255,217,61,0.6);
+}
+
+.nav-xp-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text3);
+  white-space: nowrap;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 0.8rem;
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  white-space: nowrap;
+  min-height: 36px;
+}
+.nav-btn:hover {
+  background: rgba(168,255,62,0.1);
+  border-color: rgba(168,255,62,0.3);
+  color: var(--lime);
+  text-decoration: none;
+}
+
+.nav-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+.nav-icon-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--text1);
+}
+
+/* Age badge */
+.age-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1.5px solid;
+}
+.age-badge.junior {
+  background: rgba(255,217,61,0.12);
+  border-color: rgba(255,217,61,0.35);
+  color: var(--gold);
+}
+.age-badge.senior {
+  background: rgba(0,229,255,0.1);
+  border-color: rgba(0,229,255,0.3);
+  color: var(--cyan);
+}
+.age-badge:hover { transform: scale(1.05); }
+
+/* ══════════════════════════════════════════
+   PAGE WRAPPER
+══════════════════════════════════════════ */
+.page {
+  padding-top: 88px;
+  padding-bottom: 60px;
+  padding-left: clamp(16px, 4vw, 48px);
+  padding-right: clamp(16px, 4vw, 48px);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+@keyframes pageSlideIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-enter { animation: pageSlideIn 0.4s cubic-bezier(0.16,1,0.3,1) both; }
+
+/* ══════════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-weight: 800;
+  border-radius: var(--r-pill);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.34,1.56,0.64,1);
+  text-decoration: none;
+  white-space: nowrap;
+  min-height: 46px;
+  padding: 10px 24px;
+  font-size: 0.95rem;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.btn:hover::before { opacity: 1; }
+.btn:hover { transform: translateY(-2px) scale(1.02); }
+.btn:active { transform: scale(0.97) translateY(0); }
+
+.btn-lime {
+  background: var(--lime);
+  color: var(--ink);
+  border-color: var(--lime-d);
+  box-shadow: 0 4px 0 var(--lime-d), var(--lime-glow);
+}
+.btn-lime:hover { box-shadow: 0 6px 0 var(--lime-d), 0 0 40px rgba(168,255,62,0.6); }
+
+.btn-cyan {
+  background: var(--cyan);
+  color: var(--ink);
+  border-color: var(--cyan-d);
+  box-shadow: 0 4px 0 var(--cyan-d), var(--cyan-glow);
+}
+
+.btn-gold {
+  background: var(--gold);
+  color: var(--ink);
+  border-color: var(--gold-d);
+  box-shadow: 0 4px 0 var(--gold-d), var(--gold-glow);
+}
+
+.btn-pink {
+  background: var(--pink);
+  color: white;
+  border-color: var(--pink-d);
+  box-shadow: 0 4px 0 var(--pink-d), var(--pink-glow);
+}
+
+.btn-ghost {
+  background: rgba(255,255,255,0.06);
+  color: var(--text2);
+  border-color: rgba(255,255,255,0.1);
+  box-shadow: none;
+}
+.btn-ghost:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--text1);
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-outline-lime {
+  background: transparent;
+  color: var(--lime);
+  border-color: var(--lime);
+  box-shadow: none;
+}
+.btn-outline-lime:hover {
+  background: rgba(168,255,62,0.1);
+  box-shadow: var(--lime-glow);
+}
+
+.btn-sm { min-height: 34px; padding: 6px 16px; font-size: 0.8rem; }
+.btn-lg { min-height: 56px; padding: 14px 36px; font-size: 1.1rem; border-radius: var(--r-xl); }
+.btn-full { width: 100%; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+/* ══════════════════════════════════════════
+   CARDS
+══════════════════════════════════════════ */
+.card {
+  background: var(--ink2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-glass {
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.card-hover {
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.25s ease,
+              border-color 0.2s ease;
+}
+.card-hover:hover { transform: translateY(-5px); }
+
+/* ══════════════════════════════════════════
+   HOME SCREEN
+══════════════════════════════════════════ */
+.hero-section {
+  padding-top: 40px;
+  padding-bottom: 80px;
+  text-align: center;
+  position: relative;
+}
+
+/* Pixel grid decoration */
+.pixel-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(168,255,62,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168,255,62,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(168,255,62,0.08);
+  border: 1px solid rgba(168,255,62,0.25);
+  border-radius: var(--r-pill);
+  padding: 6px 16px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--lime);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  animation: fadeSlideUp 0.6s 0.1s both;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  line-height: 0.95;
+  margin-bottom: 8px;
+  animation: fadeSlideUp 0.6s 0.2s both;
+  letter-spacing: -0.01em;
+}
+
+.hero-title span.t-lime { color: var(--lime); text-shadow: 0 0 60px rgba(168,255,62,0.5), 0 0 120px rgba(168,255,62,0.2); }
+.hero-title span.t-cyan { color: var(--cyan); text-shadow: 0 0 60px rgba(0,229,255,0.5), 0 0 120px rgba(0,229,255,0.2); }
+
+.hero-sub {
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  color: var(--text2);
+  max-width: 600px;
+  margin: 16px auto 40px;
+  line-height: 1.6;
+  font-weight: 600;
+  animation: fadeSlideUp 0.6s 0.3s both;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 64px;
+  animation: fadeSlideUp 0.6s 0.4s both;
+}
+
+/* Track cards */
+.tracks-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  max-width: 700px;
+  margin: 0 auto 80px;
+  animation: fadeSlideUp 0.6s 0.5s both;
+}
+
+.track-card {
+  position: relative;
+  background: var(--ink2);
+  border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: var(--r-xl);
+  padding: 28px 24px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  overflow: hidden;
+  text-align: center;
+}
+
+.track-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.track-card.junior::before { background: radial-gradient(circle at 50% 0%, rgba(255,217,61,0.12) 0%, transparent 70%); }
+.track-card.senior::before { background: radial-gradient(circle at 50% 0%, rgba(0,229,255,0.12) 0%, transparent 70%); }
+.track-card:hover::before { opacity: 1; }
+.track-card:hover { transform: translateY(-6px) scale(1.01); }
+.track-card.junior:hover { border-color: rgba(255,217,61,0.5); box-shadow: 0 20px 60px rgba(255,217,61,0.15), 0 0 0 1px rgba(255,217,61,0.2); }
+.track-card.senior:hover { border-color: rgba(0,229,255,0.4); box-shadow: 0 20px 60px rgba(0,229,255,0.12), 0 0 0 1px rgba(0,229,255,0.15); }
+
+.track-orb {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+.track-card.junior .track-orb { background: radial-gradient(circle, rgba(255,217,61,0.25), rgba(255,217,61,0.05)); border: 2px solid rgba(255,217,61,0.3); box-shadow: 0 0 30px rgba(255,217,61,0.3); }
+.track-card.senior .track-orb { background: radial-gradient(circle, rgba(0,229,255,0.2), rgba(0,229,255,0.03)); border: 2px solid rgba(0,229,255,0.25); box-shadow: 0 0 30px rgba(0,229,255,0.25); }
+
+.track-title { font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 6px; }
+.track-card.junior .track-title { color: var(--gold); }
+.track-card.senior .track-title { color: var(--cyan); }
+.track-desc { font-size: 0.85rem; color: var(--text3); font-weight: 600; line-height: 1.5; }
+
+/* Feature strip */
+.features-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  margin-bottom: 80px;
+}
+
+.feature-item {
+  background: var(--ink2);
+  padding: 28px 24px;
+  transition: background 0.2s;
+}
+.feature-item:hover { background: var(--ink3); }
+.feature-icon { font-size: 2rem; margin-bottom: 12px; }
+.feature-title { font-weight: 900; font-size: 0.95rem; margin-bottom: 6px; color: var(--text1); }
+.feature-desc { font-size: 0.8rem; color: var(--text3); line-height: 1.5; font-weight: 600; }
+
+/* Path cards */
+.paths-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 80px;
+}
+
+.path-card {
+  background: var(--ink2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--r-xl);
+  padding: 28px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+  overflow: hidden;
+}
+
+.path-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 0 0 var(--r-xl) var(--r-xl);
+  opacity: 0;
+  transition: opacity 0.3s, height 0.3s;
+}
+.path-card:hover::after { opacity: 1; height: 4px; }
+.path-card:hover { transform: translateY(-6px); }
+
+.path-card.it    { --pc: var(--cyan); }
+.path-card.py    { --pc: var(--gold); }
+.path-card.bash  { --pc: var(--lime); }
+.path-card::after { background: var(--pc); box-shadow: 0 0 20px var(--pc); }
+.path-card:hover { border-color: rgba(var(--pc), 0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+
+.path-num {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  line-height: 1;
+  color: rgba(255,255,255,0.04);
+  position: absolute;
+  top: 16px; right: 20px;
+}
+
+.path-icon { font-size: 2.5rem; margin-bottom: 16px; }
+.path-title { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 8px; color: var(--text1); }
+.path-desc { font-size: 0.85rem; color: var(--text3); line-height: 1.6; font-weight: 600; margin-bottom: 20px; }
+.path-modules { display: flex; flex-direction: column; gap: 6px; }
+.path-module-item { font-size: 0.78rem; font-weight: 700; color: var(--text2); display: flex; align-items: center; gap: 8px; }
+.path-module-item::before { content: '▸'; color: var(--pc, var(--lime)); font-size: 0.6rem; }
+
+/* Section headers */
+.section-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+.section-hd h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--text1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-hd h2 .hd-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--lime);
+  box-shadow: 0 0 12px var(--lime);
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════
+   DASHBOARD SCREEN
+══════════════════════════════════════════ */
+.dash-welcome {
+  background: linear-gradient(135deg, rgba(168,255,62,0.06) 0%, rgba(0,229,255,0.04) 100%);
+  border: 1px solid rgba(168,255,62,0.12);
+  border-radius: var(--r-xl);
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  position: relative;
+  overflow: hidden;
+}
+.dash-welcome::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -10%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(168,255,62,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.dash-welcome-text h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  margin-bottom: 6px;
+  color: var(--text1);
+}
+.dash-welcome-text h1 span { color: var(--lime); }
+.dash-welcome-text p { font-size: 0.9rem; color: var(--text3); font-weight: 600; }
+
+.dash-stats-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--r-pill);
+  padding: 8px 16px;
+  white-space: nowrap;
+}
+.stat-pill-icon { font-size: 1.2rem; }
+.stat-pill-val { font-family: var(--font-display); font-size: 1rem; }
+.stat-pill-val.lime { color: var(--lime); }
+.stat-pill-val.gold { color: var(--gold); }
+.stat-pill-val.fire { color: #ff6b35; }
+.stat-pill-label { font-size: 0.7rem; color: var(--text3); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* Module progress bars */
+.module-progress-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.module-prog-card {
+  background: var(--ink2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--r-lg);
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.module-prog-card:hover { border-color: rgba(255,255,255,0.14); background: var(--ink3); transform: translateY(-2px); }
+.module-prog-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.module-prog-name { font-weight: 900; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; }
+.module-prog-pct { font-family: var(--font-display); font-size: 0.75rem; color: var(--text3); }
+.prog-bar {
+  height: 8px;
+  background: rgba(255,255,255,0.06);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+.prog-bar-fill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  transition: width 1s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+  overflow: hidden;
+}
+.prog-bar-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  animation: shimmer 2.5s infinite;
+}
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Tabs */
+.tab-row {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 28px;
+}
+.tab {
+  padding: 10px 20px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--text3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s;
+  border: none;
+  background: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tab:hover { color: var(--text2); }
+.tab.active { color: var(--lime); border-bottom: 2px solid var(--lime); }
+
+/* Quest cards */
+.quests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.quest-card {
+  background: var(--ink2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+  overflow: hidden;
+}
+.quest-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--qc, var(--lime));
+  box-shadow: 0 0 12px var(--qc, var(--lime));
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+.quest-card:not(.quest-locked):hover {
+  border-color: rgba(255,255,255,0.14);
+  transform: translateY(-4px);
+  background: var(--ink3);
+}
+.quest-card.quest-done::after {
+  content: '✓';
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 28px; height: 28px;
+  background: rgba(46,213,115,0.15);
+  border: 1.5px solid rgba(46,213,115,0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--green);
+  font-weight: 900;
+}
+.quest-card.quest-locked { opacity: 0.4; cursor: not-allowed; }
+
+.quest-icon { font-size: 2.2rem; margin-bottom: 12px; display: block; }
+.quest-module { font-size: 0.7rem; font-weight: 800; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.quest-title { font-weight: 900; font-size: 0.95rem; color: var(--text1); margin-bottom: 8px; line-height: 1.3; }
+.quest-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+.quest-xp { font-size: 0.75rem; font-weight: 800; color: var(--gold); background: rgba(255,217,61,0.1); padding: 3px 10px; border-radius: var(--r-pill); border: 1px solid rgba(255,217,61,0.2); }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  font-size: 0.7rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.pill-lime { background: rgba(168,255,62,0.1); color: var(--lime); border: 1px solid rgba(168,255,62,0.25); }
+.pill-cyan { background: rgba(0,229,255,0.1); color: var(--cyan); border: 1px solid rgba(0,229,255,0.25); }
+.pill-gold { background: rgba(255,217,61,0.1); color: var(--gold); border: 1px solid rgba(255,217,61,0.25); }
+.pill-red  { background: rgba(255,71,87,0.1); color: #ff6b6b; border: 1px solid rgba(255,71,87,0.25); }
+.pill-green { background: rgba(46,213,115,0.1); color: var(--green); border: 1px solid rgba(46,213,115,0.25); }
+
+/* Badge grid */
+.badges-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.badge-tile {
+  background: var(--ink3);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--r-lg);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 100px;
+  text-align: center;
+  transition: all 0.25s;
+}
+.badge-tile.earned {
+  border-color: rgba(255,217,61,0.3);
+  background: rgba(255,217,61,0.06);
+  box-shadow: 0 0 20px rgba(255,217,61,0.1);
+}
+.badge-tile.earned:hover { transform: scale(1.08) rotate(-2deg); }
+.badge-icon { font-size: 2rem; }
+.badge-name { font-size: 0.7rem; font-weight: 800; color: var(--text2); }
+.badge-tile.locked { opacity: 0.35; filter: grayscale(100%); }
+@keyframes badgeSpin { 0%,100% { transform: rotate(-8deg); } 50% { transform: rotate(8deg); } }
+.badge-tile.earned .badge-icon { animation: badgeSpin 2s ease-in-out infinite; }
+
+/* Streak widget */
+.streak-widget {
+  background: linear-gradient(135deg, rgba(255,107,53,0.1), rgba(255,165,0,0.05));
+  border: 1px solid rgba(255,107,53,0.2);
+  border-radius: var(--r-lg);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.streak-num {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  color: #ff6b35;
+  text-shadow: 0 0 20px rgba(255,107,53,0.6);
+  line-height: 1;
+}
+.streak-label { font-size: 0.75rem; color: var(--text3); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+.streak-dots { display: flex; gap: 4px; margin-top: 6px; }
+.streak-dot { width: 16px; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.1); }
+.streak-dot.on { background: #ff6b35; box-shadow: 0 0 8px rgba(255,107,53,0.6); }
+
+/* ══════════════════════════════════════════
+   LESSON SCREEN
+══════════════════════════════════════════ */
+.lesson-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 900px) { .lesson-layout { grid-template-columns: 1fr; } }
+
+.lesson-main { }
+
+.lesson-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  font-size: 0.82rem;
+  color: var(--text3);
+  font-weight: 700;
+  flex-wrap: wrap;
+}
+.lesson-breadcrumb a { color: var(--text3); text-decoration: none; }
+.lesson-breadcrumb a:hover { color: var(--lime); }
+.lesson-breadcrumb .sep { color: rgba(255,255,255,0.15); }
+
+.lesson-hero {
+  background: var(--ink2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--r-xl);
+  padding: 32px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.lesson-hero::before {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(168,255,62,0.06), transparent 70%);
+  pointer-events: none;
+}
+
+.lesson-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  color: var(--text1);
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+.lesson-hero-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.lesson-content-body { }
+.lesson-content-body h2 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--lime);
+  margin: 32px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.lesson-content-body h2::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(168,255,62,0.2), transparent);
+  border-radius: 1px;
+}
+
+.lesson-content-body p { color: var(--text2); line-height: 1.8; margin-bottom: 16px; font-size: 1rem; font-weight: 600; }
+
+.lesson-content-body code {
+  font-family: var(--font-code);
+  background: rgba(0,229,255,0.08);
+  color: var(--cyan);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.88em;
+}
+
+.code-block {
+  background: var(--ink);
+  border: 1px solid rgba(168,255,62,0.15);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin: 20px 0;
+  box-shadow: 0 0 40px rgba(0,0,0,0.4);
+}
+.code-block-head {
+  background: rgba(168,255,62,0.06);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(168,255,62,0.1);
+}
+.code-dot { width: 10px; height: 10px; border-radius: 50%; }
+.code-dot.r { background: #ff5f57; }
+.code-dot.y { background: #ffbd2e; }
+.code-dot.g { background: #28c840; }
+.code-block-lang { font-family: var(--font-code); font-size: 0.7rem; color: var(--lime); margin-left: auto; text-transform: uppercase; letter-spacing: 0.1em; }
+.code-block pre {
+  padding: 20px;
+  overflow-x: auto;
+  font-family: var(--font-code);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: #aaffaa;
+  margin: 0;
+}
+.code-block-actions { padding: 10px 16px; display: flex; gap: 8px; border-top: 1px solid rgba(255,255,255,0.04); }
+
+.info-callout {
+  background: rgba(0,229,255,0.05);
+  border-left: 3px solid var(--cyan);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 0.9rem;
+  color: var(--text2);
+  font-weight: 600;
+}
+.info-callout strong { color: var(--cyan); }
+
+.fact-callout {
+  background: rgba(255,217,61,0.05);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 0.9rem;
+  color: var(--text2);
+  font-weight: 600;
+}
+.fact-callout strong { color: var(--gold); }
+
+/* Hint drawer */
+.hint-drawer {
+  border: 1.5px dashed rgba(0,229,255,0.25);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  margin: 20px 0;
+}
+.hint-trigger {
+  width: 100%;
+  background: rgba(0,229,255,0.04);
+  border: none;
+  padding: 12px 18px;
+  color: var(--cyan);
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  transition: background 0.15s;
+}
+.hint-trigger:hover { background: rgba(0,229,255,0.08); }
+.hint-arrow { margin-left: auto; transition: transform 0.25s; }
+.hint-trigger.open .hint-arrow { transform: rotate(180deg); }
+.hint-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.2s;
+  padding: 0 18px;
+  font-size: 0.85rem;
+  color: var(--text3);
+  font-weight: 600;
+  line-height: 1.7;
+  background: rgba(0,229,255,0.03);
+}
+.hint-body.open { max-height: 300px; padding: 14px 18px; }
+
+/* Checkpoint */
+.checkpoint-card {
+  background: linear-gradient(135deg, rgba(168,255,62,0.05), rgba(168,255,62,0.02));
+  border: 1px solid rgba(168,255,62,0.15);
+  border-radius: var(--r-xl);
+  padding: 28px;
+  margin-top: 32px;
+}
+.checkpoint-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--lime);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.checkpoint-q { font-weight: 900; font-size: 1.05rem; color: var(--text1); margin-bottom: 20px; }
+
+.quiz-opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border: 1.5px solid rgba(255,255,255,0.07);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: all 0.18s;
+  font-weight: 700;
+  font-size: 0.9rem;
+  background: rgba(255,255,255,0.02);
+  margin-bottom: 10px;
+  color: var(--text2);
+}
+.quiz-opt:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.05); color: var(--text1); }
+.quiz-opt.correct { border-color: var(--green); background: rgba(46,213,115,0.08); color: var(--green); }
+.quiz-opt.wrong { border-color: var(--red); background: rgba(255,71,87,0.08); color: #ff8080; }
+.quiz-opt-key {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: var(--text3);
+}
+
+/* Lesson sidebar */
+.lesson-sidebar { display: flex; flex-direction: column; gap: 16px; }
+.sidebar-card { background: var(--ink2); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--r-lg); padding: 20px; }
+.sidebar-card h3 { font-weight: 900; font-size: 0.85rem; margin-bottom: 14px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; display: flex; align-items: center; gap: 8px; }
+
+/* ══════════════════════════════════════════
+   TERMINAL SCREEN
+══════════════════════════════════════════ */
+.terminal-wrap {
+  background: #060810;
+  border: 1px solid rgba(168,255,62,0.2);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(168,255,62,0.08), 0 30px 60px rgba(0,0,0,0.5);
+}
+.terminal-bar {
+  background: rgba(168,255,62,0.06);
+  border-bottom: 1px solid rgba(168,255,62,0.12);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.t-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.t-dot.r { background: #ff5f57; } .t-dot.y { background: #ffbd2e; } .t-dot.g { background: #28c840; }
+.t-title { font-family: var(--font-code); font-size: 0.75rem; color: rgba(168,255,62,0.5); margin-left: 8px; }
+.t-mock-label { margin-left: auto; font-size: 0.65rem; color: rgba(255,255,255,0.2); font-family: var(--font-code); }
+
+.terminal-output {
+  padding: 20px;
+  min-height: 260px;
+  max-height: 380px;
+  overflow-y: auto;
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+.tl { display: block; }
+.tl-cmd { color: var(--lime); }
+.tl-cmd::before { content: '$ '; color: var(--gold); }
+.tl-out { color: #88dd88; }
+.tl-err { color: #ff7070; }
+.tl-info { color: var(--cyan); }
+
+.terminal-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(168,255,62,0.08);
+  background: rgba(0,0,0,0.3);
+}
+.t-prompt { font-family: var(--font-code); color: var(--gold); font-size: 0.85rem; white-space: nowrap; flex-shrink: 0; }
+.t-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  color: var(--lime);
+  caret-color: var(--gold);
+}
+.t-run { background: var(--lime); color: var(--ink); border: none; border-radius: 6px; padding: 4px 12px; font-size: 0.75rem; font-weight: 800; cursor: pointer; transition: all 0.15s; }
+.t-run:hover { background: #c8ff5a; }
+
+.t-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 16px; border-top: 1px solid rgba(255,255,255,0.03); background: rgba(0,0,0,0.2); }
+.t-chip {
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  color: rgba(168,255,62,0.7);
+  background: rgba(168,255,62,0.06);
+  border: 1px solid rgba(168,255,62,0.15);
+  border-radius: 6px;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.t-chip:hover { background: rgba(168,255,62,0.14); color: var(--lime); }
+
+/* ══════════════════════════════════════════
+   PYTHON EDITOR
+══════════════════════════════════════════ */
+.editor-wrap {
+  background: #060810;
+  border: 1px solid rgba(0,229,255,0.2);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(0,229,255,0.06), 0 30px 60px rgba(0,0,0,0.5);
+}
+.editor-bar {
+  background: rgba(0,229,255,0.05);
+  border-bottom: 1px solid rgba(0,229,255,0.1);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.editor-bar-title { font-size: 0.75rem; font-weight: 800; color: rgba(0,229,255,0.6); font-family: var(--font-code); }
+.editor-bar-file { font-size: 0.72rem; color: rgba(255,255,255,0.25); font-family: var(--font-code); }
+
+.editor-area { display: flex; }
+.editor-gutter {
+  background: rgba(0,0,0,0.25);
+  padding: 20px 12px;
+  font-family: var(--font-code);
+  font-size: 0.82rem;
+  line-height: 1.72;
+  color: rgba(255,255,255,0.15);
+  text-align: right;
+  user-select: none;
+  min-width: 44px;
+  border-right: 1px solid rgba(255,255,255,0.04);
+}
+.editor-textarea {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--font-code);
+  font-size: 0.82rem;
+  line-height: 1.72;
+  color: #aaffaa;
+  padding: 20px;
+  resize: none;
+  min-height: 220px;
+  tab-size: 4;
+  caret-color: var(--cyan);
+  width: 100%;
+}
+
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  background: rgba(0,0,0,0.2);
+}
+.run-status { font-size: 0.75rem; color: var(--text3); margin-left: auto; font-family: var(--font-code); }
+
+.editor-output {
+  border-top: 1px solid rgba(0,229,255,0.08);
+  padding: 16px 20px;
+  font-family: var(--font-code);
+  font-size: 0.82rem;
+  min-height: 80px;
+  max-height: 180px;
+  overflow-y: auto;
+  color: #88dd88;
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+.editor-output.err { color: #ff7070; }
+
+/* ══════════════════════════════════════════
+   QUIZ SCREEN
+══════════════════════════════════════════ */
+.quiz-layout {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.quiz-prog {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.quiz-prog-bar { flex: 1; height: 8px; background: rgba(255,255,255,0.06); border-radius: var(--r-pill); overflow: hidden; }
+.quiz-prog-fill { height: 100%; background: linear-gradient(90deg, var(--gold-d), var(--gold)); border-radius: var(--r-pill); transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 0 10px rgba(255,217,61,0.5); }
+
+.quiz-card {
+  background: var(--ink2);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--r-xl);
+  padding: 32px;
+}
+.quiz-q-text { font-weight: 900; font-size: 1.1rem; color: var(--text1); margin-bottom: 24px; line-height: 1.4; }
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+.toast-container {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 600;
+  pointer-events: none;
+}
+.toast {
+  background: var(--ink3);
+  border: 1px solid rgba(255,217,61,0.25);
+  border-radius: var(--r-lg);
+  padding: 14px 18px;
+  max-width: 320px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 30px rgba(255,217,61,0.1);
+  animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: all;
+}
+.toast.removing { animation: toastOut 0.3s ease forwards; }
+@keyframes toastIn { from { transform: translateX(100%) scale(0.8); opacity: 0; } to { transform: translateX(0) scale(1); opacity: 1; } }
+@keyframes toastOut { to { transform: translateX(110%) scale(0.9); opacity: 0; } }
+.toast-icon { font-size: 1.8rem; flex-shrink: 0; }
+.toast-body { flex: 1; }
+.toast-title { font-weight: 900; font-size: 0.85rem; color: var(--gold); margin-bottom: 2px; }
+.toast-desc { font-size: 0.75rem; color: var(--text3); font-weight: 600; }
+.toast-x { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 0.9rem; padding: 2px; line-height: 1; }
+
+/* ══════════════════════════════════════════
+   LEVELUP OVERLAY
+══════════════════════════════════════════ */
+.levelup-overlay {
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at center, rgba(255,217,61,0.25) 0%, rgba(0,0,0,0.85) 70%);
+  z-index: 700;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 16px;
+}
+.lu-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 8vw, 5rem);
+  color: var(--gold);
+  text-shadow: 0 0 60px rgba(255,217,61,0.8), 0 0 120px rgba(255,217,61,0.4);
+  animation: luPulse 0.6s ease infinite alternate;
+}
+@keyframes luPulse { from { transform: scale(1); } to { transform: scale(1.04); } }
+.lu-sub { font-family: var(--font-display); font-size: clamp(0.8rem, 3vw, 1.2rem); color: var(--cyan); }
+
+/* ══════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(8px);
+  z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.modal-overlay.hidden { display: none; }
+.modal-box {
+  background: var(--ink3);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--r-xl);
+  padding: 36px;
+  max-width: 520px;
+  width: 100%;
+  animation: modalIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+}
+@keyframes modalIn { from { transform: scale(0.85) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+
+/* ══════════════════════════════════════════
+   PARENT VIEW
+══════════════════════════════════════════ */
+.parent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 28px; }
+.parent-stat {
+  background: var(--ink2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  text-align: center;
+}
+.parent-stat-val { font-family: var(--font-display); font-size: 1.6rem; margin-bottom: 4px; }
+.parent-stat-lbl { font-size: 0.72rem; color: var(--text3); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ══════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════ */
+.flex { display: flex; } .items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 8px; } .gap-3 { gap: 12px; } .gap-4 { gap: 16px; }
+.mt-2 { margin-top: 8px; } .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; } .mt-8 { margin-top: 32px; }
+.mb-2 { margin-bottom: 8px; } .mb-4 { margin-bottom: 16px; } .mb-6 { margin-bottom: 24px; }
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+.w-full { width: 100%; }
+.grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+@media (max-width:640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+.input {
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: var(--r-md);
+  padding: 12px 16px;
+  color: var(--text1);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  width: 100%;
+  min-height: 46px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.input:focus { outline: none; border-color: var(--lime); box-shadow: 0 0 0 3px rgba(168,255,62,0.15); }
+
+.empty-state { text-align: center; padding: 60px 16px; color: var(--text3); }
+.empty-icon { font-size: 4rem; margin-bottom: 16px; opacity: 0.4; }
+
+@media (max-width: 768px) {
+  .tracks-row { max-width: 360px; }
+  .nav-xp { display: none; }
+}
+</style>
 </head>
 <body>
-  <header>
-    <h1>BlockByte Academy</h1>
-    <div id="xp-bar">XP: <span id="xp-count">0</span></div>
-  </header>
-  <main id="app-root">
-    </main>
-  <script type="module" src="app.js"></script>
+
+<!-- TOPNAV -->
+<nav class="topnav" role="navigation" aria-label="Main navigation">
+  <a href="#/" class="nav-logo" aria-label="BlockByte Academy Home">
+    <div class="nav-logo-icon" aria-hidden="true">🧱</div>
+    <div>
+      <div class="nav-logo-text">BlockByte</div>
+      <div class="nav-logo-sub">Academy</div>
+    </div>
+  </a>
+
+  <div class="nav-xp" id="navXP" aria-label="XP progress"></div>
+
+  <div class="nav-right">
+    <button class="age-badge junior" id="ageToggle" aria-label="Switch age track">👾 Ages 8–11</button>
+    <a href="#/parent" class="nav-btn">👨‍👩‍👧 Parents</a>
+    <button class="nav-icon-btn" id="settingsBtn" aria-label="Settings" title="Settings">⚙️</button>
+  </div>
+</nav>
+
+<main id="app" tabindex="-1" aria-label="Main content"></main>
+
+<div id="toasts" class="toast-container" aria-live="polite"></div>
+
+<div id="modalOverlay" class="modal-overlay hidden" role="dialog" aria-modal="true">
+  <div class="modal-box" id="modalBox"></div>
+</div>
+
+<script type="module">
+/* ═══════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════ */
+const DEF = { nickname:'Adventurer', ageMode:'junior', xp:0, level:1, streak:0, lastActive:null, badges:[], completed:[], quizScores:{} };
+let S = (() => { try { return { ...DEF, ...JSON.parse(localStorage.getItem('bb_state')||'{}') }; } catch { return {...DEF}; } })();
+
+function save() { try { localStorage.setItem('bb_state', JSON.stringify(S)); } catch {} }
+function set(fn) { S = typeof fn === 'function' ? fn(S) : { ...S, ...fn }; save(); renderNav(); }
+
+const XP_THRESH = [0,0,100,250,450,700,1000,1350,1750,2200,2700];
+function levelInfo(xp) {
+  let lv = 1;
+  for (let i = 1; i < XP_THRESH.length; i++) { if (xp >= XP_THRESH[i]) lv = i; else break; }
+  const cur = XP_THRESH[lv]||0, nxt = XP_THRESH[lv+1]||(XP_THRESH[lv]+500);
+  return { lv, pct: Math.min(100, Math.round(((xp-cur)/(nxt-cur))*100)), inLv: xp-cur, max: nxt-cur };
+}
+
+function awardXP(amt, reason='') {
+  const prev = levelInfo(S.xp).lv;
+  set(s => ({ ...s, xp: s.xp + amt }));
+  toast('⭐', `+${amt} XP!`, reason || 'Keep it up!');
+  const now = levelInfo(S.xp).lv;
+  if (now > prev) setTimeout(() => showLevelUp(now), 700);
+}
+
+function awardBadge(id, name, icon) {
+  if (S.badges.includes(id)) return;
+  set(s => ({ ...s, badges: [...s.badges, id] }));
+  toast('🏆', `Badge: ${name}`, `${icon} You earned something epic!`);
+}
+
+function complete(id, xpAmt) {
+  if (S.completed.includes(id)) return;
+  set(s => ({ ...s, completed: [...s.completed, id] }));
+  awardXP(xpAmt, 'Lesson complete!');
+  const today = new Date().toDateString();
+  const yest = new Date(Date.now()-86400000).toDateString();
+  let streak = S.streak;
+  if (S.lastActive === today) return;
+  streak = S.lastActive === yest ? streak + 1 : 1;
+  set(s => ({ ...s, streak, lastActive: today }));
+}
+
+/* Toasts */
+function toast(icon, title, body, type='') {
+  const c = document.getElementById('toasts');
+  if (!c) return;
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = `<span class="toast-icon">${icon}</span><div class="toast-body"><div class="toast-title">${title}</div><div class="toast-desc">${body}</div></div><button class="toast-x" aria-label="Dismiss">✕</button>`;
+  el.querySelector('.toast-x').onclick = () => rmToast(el);
+  c.appendChild(el);
+  setTimeout(() => rmToast(el), 4500);
+}
+function rmToast(el) { el.classList.add('removing'); setTimeout(() => el.remove(), 350); }
+
+function showLevelUp(lv) {
+  const o = document.createElement('div');
+  o.className = 'levelup-overlay';
+  o.innerHTML = `<div style="font-size:5rem;animation:badgeSpin 1s ease-in-out infinite">🎉</div>
+    <div class="lu-title">LEVEL UP!</div>
+    <div class="lu-sub">You reached Level ${lv}!</div>
+    <button class="btn btn-gold mt-8" style="margin-top:24px">Let's go! 🚀</button>`;
+  o.querySelector('button').onclick = () => o.remove();
+  document.body.appendChild(o);
+  setTimeout(() => o.remove(), 9000);
+}
+
+function showModal(html) {
+  document.getElementById('modalBox').innerHTML = html;
+  document.getElementById('modalOverlay').classList.remove('hidden');
+  document.getElementById('modalBox').querySelector('[data-close]')?.addEventListener('click', closeModal);
+  document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target.id==='modalOverlay') closeModal(); });
+}
+function closeModal() { document.getElementById('modalOverlay').classList.add('hidden'); }
+
+/* Routing */
+function getHash() { return location.hash.replace('#','') || '/'; }
+function getParam(k) { const p = new URLSearchParams(location.hash.split('?')[1]||''); return p.get(k); }
+function go(path) { location.hash = path; }
+
+/* ═══════════════════════════════════════════
+   CONTENT DATA
+═══════════════════════════════════════════ */
+const MODULES = [
+  {
+    id:'it', name:'IT Basics', icon:'🖥️', color:'var(--cyan)',
+    fillCss:'linear-gradient(90deg,#00acc1,#00e5ff)',
+    lessons:[
+      { id:'it-01', title:'What is a Computer?', xp:50,
+        jr: { intro:'A computer is like a super-smart robot that follows your instructions. Four main parts work as a team!',
+              sections:[{h:'🧠 The CPU — The Brain',p:'The CPU (Central Processing Unit) does all the thinking — billions of calculations per second! It\'s the heart of every computer.',code:null},{h:'💾 RAM — Working Memory',p:'RAM holds what you\'re working on RIGHT NOW. Close a program and it\'s gone from RAM — like clearing your desk.',code:null},{h:'🗄️ Storage — Your Backpack',p:'Hard drives and SSDs keep files even when powered off. SSDs are way faster than old HDDs!',code:null}],
+              fact:'🤩 The phone in your pocket is MILLIONS of times more powerful than the computers that sent humans to the Moon!',
+              cp:{q:'What does RAM do?',opts:['Stores files forever','Holds what you\'re currently working on','Connects to Wi-Fi','Makes screen brighter'],ans:1,fb:'Right! RAM is short-term, fast memory — it only holds data while the computer is on.'} },
+        sr: { intro:'A computer system comprises hardware and software. Understanding architecture is fundamental to every tech career.',
+              sections:[{h:'CPU Architecture',p:'Modern CPUs have multiple cores enabling parallel execution. Clock speed (GHz) measures cycles per second. Modern CPUs exceed 3 billion instructions/sec.',code:null},{h:'Memory Hierarchy',p:'RAM (volatile) provides fast short-term storage. SSDs use NAND flash for persistent storage with ~550MB/s read speeds vs HDD ~120MB/s.',code:null},{h:'The Motherboard',p:'The main circuit board connecting CPU, RAM, storage, and peripherals via the chipset. PCIe lanes determine bandwidth for GPUs and NVMe drives.',code:null}],
+              fact:'💡 Modern CPUs contain over 10 billion transistors on chips smaller than your fingernail.',
+              cp:{q:'What is the key difference between RAM and SSD storage?',opts:['RAM is volatile and fast; SSD is persistent but slower','RAM stores more data than SSD','SSD is faster for calculations','They are the same technology'],ans:0,fb:'Exactly! RAM loses data on power-off but is extremely fast. SSDs persist but are orders of magnitude slower than RAM.'} }
+      },
+      { id:'it-02', title:'How Networks Work', xp:60,
+        jr:{ intro:'The internet is a giant web of computers all talking to each other across the globe! 🌐',
+             sections:[{h:'📡 Routers & Wi-Fi',p:'A router is like a postal sorting office for data. It receives packets and delivers them to the right device on your network.',code:null},{h:'🌐 IP Addresses',p:'Every device has an IP address — like a home address for computers. Example: 192.168.1.1 is your router at home!',code:null}],
+             fact:'🤩 Over 5 billion people use the internet. That\'s more than half of everyone on Earth!',
+             cp:{q:'What does a router do?',opts:['Stores your photos','Directs internet data to the right device','Makes computers faster','Charges your phone'],ans:1,fb:'Spot on! A router is a traffic controller for network data.'} },
+        sr:{ intro:'Networking underpins all connected systems. The OSI model, TCP/IP stack, and protocol knowledge are essential skills.',
+             sections:[{h:'OSI Model (7 Layers)',p:'Physical → Data Link → Network → Transport → Session → Presentation → Application. Each layer abstracts complexity from the one below.',code:null},{h:'TCP/IP & DNS',p:'TCP ensures reliable delivery via handshaking. DNS translates domains to IPs — the internet\'s phonebook. UDP sacrifices reliability for speed (video, gaming).',code:null}],
+             fact:'💡 The first ARPANET message in 1969 was "LO" — the system crashed before sending "LOGIN".',
+             cp:{q:'What does DNS do?',opts:['Translates domain names to IP addresses','Encrypts web traffic','Stores website files','Manages router settings'],ans:0,fb:'Correct! DNS is the internet\'s address book, mapping names like google.com to IP addresses.'} }
+      },
+      { id:'it-03', title:'Cybersecurity Basics', xp:65,
+        jr:{ intro:'Learn your digital safety superpowers and protect yourself online! 🦸',
+             sections:[{h:'🔐 Strong Passwords',p:'A strong password is long, random, and unique. Try 4 random words: "purple-rocket-banana-cloud" — easy to remember, hard to crack!',code:null},{h:'🎣 Phishing — Don\'t Take the Bait',p:'Fake emails pretend to be real companies to steal your info. Rule: NEVER click suspicious links or share passwords with anyone.',code:null}],
+             fact:'🤩 The most common password worldwide is still "123456" — don\'t be that person!',
+             cp:{q:'Which is the strongest password?',opts:['password123','Fluffy2020','kT@9#mZq!2','myname'],ans:2,fb:'Right! A mix of uppercase, lowercase, numbers and symbols makes a very strong password.'} },
+        sr:{ intro:'Cybersecurity is the fastest-growing field in tech. Attack vectors, defence strategies, and threat modelling are core knowledge.',
+             sections:[{h:'Attack Vectors',p:'Phishing exploits psychology. SQL injection attacks unparameterised queries. XSS injects scripts into web pages. Social engineering bypasses technical defences entirely.',code:null},{h:'Defence Layers',p:'MFA adds a second factor beyond passwords. HTTPS (TLS 1.3) encrypts in transit. Principle of least privilege limits blast radius. Zero-trust assumes breach.',code:null}],
+             fact:'💡 The average cost of a data breach in 2023 was $4.45 million. Cybersecurity engineers command top salaries.',
+             cp:{q:'What is the "principle of least privilege"?',opts:['Admins have unlimited access','Users get only the minimum access they need','Passwords should be short','Software uses minimal CPU'],ans:1,fb:'Exactly! Limiting access reduces damage if an account is ever compromised.'} }
+      },
+    ]
+  },
+  {
+    id:'py', name:'Python', icon:'🐍', color:'var(--gold)',
+    fillCss:'linear-gradient(90deg,#d4a000,#ffd93d)',
+    lessons:[
+      { id:'py-01', title:'Hello, Python!', xp:50,
+        jr:{ intro:'Python is a coding language named after a TV show — and it\'s one of the easiest AND most powerful languages ever made! 🐍',
+             sections:[{h:'✍️ Your First Program',p:'One line of code makes the computer print anything on screen. That\'s it. You\'re already coding!',code:'print("Hello, World!")\nprint("I am a programmer now!")\nprint("This is SO cool! 🎉")'}],
+             fact:'🤩 Python is used by NASA, Google, Netflix, Spotify, and Instagram. You\'re learning with the pros!',
+             cp:{q:'How do you print text in Python?',opts:['say("Hello")','print("Hello")','echo Hello','write("Hello")'],ans:1,fb:'Nailed it! print() is your first Python superpower.'} },
+        sr:{ intro:'Python is an interpreted, dynamically-typed, high-level language. Its philosophy of readability makes it ideal for rapid development.',
+             sections:[{h:'Python Fundamentals',p:'Python uses indentation for code blocks (4 spaces standard). The REPL (Read-Eval-Print Loop) enables interactive experimentation. f-strings (3.6+) are the modern way to format strings.',code:'# Comments start with #\nprint("Hello, World!")   # → Hello, World!\n\n# f-strings\nname = "Coder"\nprint(f"Hello, {name}!")  # → Hello, Coder!\n\n# Multiple values\nfor i in range(3):\n    print(f"Line {i+1}")'}],
+             fact:'💡 Python\'s creator Guido van Rossum was reading Monty Python scripts when he designed the language — hence the name!',
+             cp:{q:'What does REPL stand for?',opts:['Run Execute Print Loop','Read-Eval-Print Loop','Repeated Entry Program Language','Real-time Execution Pipeline Layer'],ans:1,fb:'Correct! REPL lets you type Python and see results instantly.'} }
+      },
+      { id:'py-02', title:'Variables & Data', xp:60,
+        jr:{ intro:'Variables are labelled boxes where you store things. Python figures out what type of thing it is automatically! 📦',
+             sections:[{h:'📦 Types of Data',p:'Numbers (42), text "strings" ("Hello"), and True/False "booleans". Just give it a name and Python handles the rest!',code:'name = "Alex"         # text (string)\nage = 12              # whole number (int)\nheight = 1.65         # decimal (float)\nis_awesome = True     # true/false (bool)\n\nprint(f"{name} is {age} years old!")\nprint(f"Awesome? {is_awesome}")'}],
+             fact:'🤩 The word "string" for text comes from "a string of characters" — imagine letters on a piece of string!',
+             cp:{q:'What type is: score = 100?',opts:['String','Float','Integer','Boolean'],ans:2,fb:'Great! 100 is a whole number = integer (int).'} },
+        sr:{ intro:'Python\'s dynamic type system is powerful but requires understanding. Type hints (PEP 484) improve code clarity without sacrificing flexibility.',
+             sections:[{h:'Types & Type System',p:'Python has int, float, str, bool, list, tuple, dict, set, None, and more. type() checks types. isinstance() checks inheritance. Type hints enable IDE support and mypy static analysis.',code:'name: str = "Alex"\nage: int = 16\ngpa: float = 3.8\n\nprint(type(name))           # <class \'str\'>\nprint(isinstance(gpa, (int, float)))  # True\n\n# Walrus operator (3.8+)\nif (n := len(name)) > 3:\n    print(f"Long name: {n} chars")'}],
+             fact:'💡 Python uses duck typing: "If it walks like a duck and quacks like a duck, it\'s a duck." Behaviour matters more than type.',
+             cp:{q:'What does type(3.14) return?',opts:["<class 'int'>","<class 'float'>","<class 'number'>","<class 'decimal'>"],ans:1,fb:'Correct! 3.14 is a floating-point number.'} }
+      },
+      { id:'py-03', title:'Loops & Decisions', xp:70,
+        jr:{ intro:'What if your code could make decisions? With if/else it can! And loops let you repeat things without retyping! 🔁',
+             sections:[{h:'🤔 if / elif / else',p:'Python checks conditions and chooses what to do — just like: IF it\'s raining, bring an umbrella. ELSE, wear sunglasses.',code:'mood = "happy"\n\nif mood == "happy":\n    print("😄 Great day to code!")\nelif mood == "tired":\n    print("☕ Need some energy!")\nelse:\n    print("🤔 How are you feeling?")\n\n# Count down!\nfor i in range(5, 0, -1):\n    print(f"Launching in {i}...")\nprint("🚀 BLASTOFF!")'}],
+             fact:'🤩 Computers make billions of if/else decisions per second — from showing ads to recognising your face!',
+             cp:{q:'What does elif mean in Python?',opts:['else if — another condition to check','a type of loop','a print command','an error'],ans:0,fb:'Spot on! elif lets you chain multiple conditions.'} },
+        sr:{ intro:'Control flow determines program logic. Python\'s clean syntax and powerful iterables make loops elegant and expressive.',
+             sections:[{h:'Advanced Control Flow',p:'Python supports list/dict/set comprehensions, generator expressions, enumerate(), zip(), and the walrus operator (:=) for assignment within expressions.',code:'# List comprehension\neven_squares = [x**2 for x in range(10) if x%2==0]\nprint(even_squares)  # [0,4,16,36,64]\n\n# Dict comprehension\nscores = {"Alice":92, "Bob":87, "Carol":95}\ngrades = {k: "A" if v>=90 else "B" for k,v in scores.items()}\nprint(grades)\n\n# Generator (memory-efficient)\ntotal = sum(x**2 for x in range(1_000_000))'}],
+             fact:'💡 Python\'s for loop works on ANY iterable — strings, files, databases, custom objects. This is by design.',
+             cp:{q:'What does a list comprehension do?',opts:['Deletes items','Creates a new list with optional filtering/transformation','Sorts a list','Counts items'],ans:1,fb:'Exactly! [expr for x in iterable if condition] is idiomatic Python.'} }
+      },
+    ]
+  },
+  {
+    id:'bash', name:'Bash Scripting', icon:'💻', color:'var(--lime)',
+    fillCss:'linear-gradient(90deg,#6bb520,#a8ff3e)',
+    lessons:[
+      { id:'bash-01', title:'The Terminal Awaits', xp:50,
+        jr:{ intro:'The terminal looks scary — black screen, blinking cursor — but it\'s actually the most POWERFUL tool on any computer! 💪',
+             sections:[{h:'💻 Your First Commands',p:'Instead of clicking, you type! A few commands navigate your whole computer.',code:'ls          # List files here\ncd Documents  # Go into Documents\ncd ..       # Go back one level\npwd         # Where am I?\nclear       # Clean the screen'}],
+             fact:'🤩 Many servers are managed ENTIRELY through a terminal — no mouse, no graphics, just keyboard power!',
+             cp:{q:'What does pwd do?',opts:['Lists files','Goes to a folder','Shows current directory path','Clears the screen'],ans:2,fb:'Right! pwd = Print Working Directory — shows exactly where you are.'} },
+        sr:{ intro:'The Unix shell (Bash is default on most Linux systems) is a command interpreter AND a full scripting environment.',
+             sections:[{h:'Navigation & File Operations',p:'The filesystem is a tree from /. ~ is your home. Absolute paths start at /; relative from current location.',code:'ls -la              # List all (including hidden) with details\ncd ~/projects       # Go to projects in home dir\npwd                 # Print working directory\nmkdir -p src/utils  # Create nested directories\ncp -r src/ backup/  # Recursive copy\nfind . -name "*.py" -newer last_run.py  # Find newer files'}],
+             fact:'💡 Bash = "Bourne Again Shell" — a pun on the original Unix shell by Stephen Bourne (1989). Still the most widely used shell.',
+             cp:{q:'What does ~ represent?',opts:['Root directory /','Your home directory','Current directory .','Parent directory ..'],ans:1,fb:'Correct! ~ is shorthand for /home/username (Linux) or /Users/username (Mac).'} }
+      },
+      { id:'bash-02', title:'Pipes & Power Tools', xp:70,
+        jr:{ intro:'Pipes | let you chain commands together like a data assembly line. Super powerful! ⚡',
+             sections:[{h:'🔗 Piping Commands',p:'Send the OUTPUT of one command as the INPUT to the next. Like a water pipe, but for data!',code:'# Show file contents\ncat README.txt\n\n# Count words in a file\ncat README.txt | wc -w\n\n# Find .txt files in listing\nls | grep ".txt"\n\n# Save output to a file\necho "Hello!" > greeting.txt\n\n# Add to a file (append)\necho "More text" >> greeting.txt'}],
+             fact:'🤩 The pipe | was invented in 1973 and is still one of the most used features in computing!',
+             cp:{q:'What does | (pipe) do?',opts:['Creates a file','Sends command output to input of next command','Deletes a file','Searches for text'],ans:1,fb:'Spot on! Pipes make it possible to build powerful one-liners.'} },
+        sr:{ intro:'Pipes, redirection, and POSIX text-processing tools form the backbone of efficient shell workflows.',
+             sections:[{h:'Redirection & Text Processing',p:'> overwrites, >> appends, < reads input, 2> captures stderr, 2>&1 merges stderr into stdout. grep, sed, awk, cut, sort, uniq are the core tools.',code:'# Separate stdout and stderr\ncommand > output.txt 2> errors.txt\n\n# Merge both\ncommand > all.txt 2>&1\n\n# Multi-step pipeline\ncat /etc/passwd | cut -d: -f1 | sort | uniq | head -10\n\n# awk: process structured data\nps aux | awk \'NR>1 {print $1, $3, $11}\' | sort -k2 -rn | head -5'}],
+             fact:'💡 The Unix philosophy: small, composable tools. Do one thing well and communicate via text streams. Pipes make this work.',
+             cp:{q:'What is the difference between > and >>?',opts:['> appends, >> overwrites','> overwrites, >> appends','They are identical','> reads a file, >> writes one'],ans:1,fb:'Correct! > creates/overwrites. >> adds to the end without destroying existing content.'} }
+      },
+      { id:'bash-03', title:'Write Your First Script', xp:85,
+        jr:{ intro:'A script is a file full of commands that run all at once. Write it once, run it whenever! 🎬',
+             sections:[{h:'📝 Script Structure',p:'Every Bash script starts with a "shebang" line that tells the system what to use to run it.',code:'#!/bin/bash\n# My first script!\n\necho "Welcome to my script! 🎉"\n\nname="Alex"\necho "Hello, $name!"\n\n# Simple math\nnumber=10\ndouble=$((number * 2))\necho "Double of $number is $double"'}],
+             fact:'🤩 System administrators use scripts to automatically manage THOUSANDS of computers at once!',
+             cp:{q:'What is the first line of a Bash script called?',opts:['Header','Import','Shebang','Declaration'],ans:2,fb:'Correct! #!/bin/bash tells the OS which interpreter to use.'} },
+        sr:{ intro:'Production Bash scripts require error handling, logging, and defensive programming. set -euo pipefail is non-negotiable.',
+             sections:[{h:'Production-Grade Script',p:'set -e exits on error. -u treats undefined variables as errors. -o pipefail catches failures in pipes. Always quote variables.',code:'#!/bin/bash\nset -euo pipefail\n\nlog() { echo "[$(date +\'%F %T\')] $1" | tee -a /tmp/backup.log; }\nerr() { log "ERROR: $1"; exit 1; }\n\nSRC="${1:-$HOME/Documents}"\n[[ -d "$SRC" ]] || err "Source not found: $SRC"\n\nTS=$(date +%Y%m%d_%H%M%S)\nDEST="$HOME/backups/backup_$TS.tar.gz"\n\nmkdir -p "$HOME/backups"\ntar -czf "$DEST" -C "$(dirname "$SRC")" "$(basename "$SRC")"\nlog "Backup complete: $(du -sh "$DEST" | cut -f1)"'}],
+             fact:'💡 set -euo pipefail is the bash "strict mode". Every production script should start with it.',
+             cp:{q:'What does set -e do?',opts:['Enables colour output','Makes script exit immediately on any error','Sets environment variables','Enables debug tracing'],ans:1,fb:'Right! -e (errexit) prevents cascading failures by stopping on the first error.'} }
+      },
+    ]
+  }
+];
+
+const QUIZZES = [
+  { id:'q-it', title:'IT Blitz', desc:'Fast-fire IT knowledge check!', icon:'🖥️', xp:80,
+    qs:[
+      {q:'What does CPU stand for?',opts:['Central Processing Unit','Computer Power Upgrade','Core Program Utility','Circuit Processor'],ans:0},
+      {q:'Which translates domain names to IP addresses?',opts:['HTTP','DNS','FTP','TCP'],ans:1},
+      {q:'Which storage loses data on power off?',opts:['SSD','HDD','RAM','USB'],ans:2},
+      {q:'HTTPS provides what HTTP lacks?',opts:['More speed','Encryption via TLS','More storage','Colour'],ans:1},
+    ]},
+  { id:'q-py', title:'Python Power Quiz', desc:'Test your Python across all topics!', icon:'🐍', xp:80,
+    qs:[
+      {q:'Keyword to create a function in Python?',opts:['function','create','def','make'],ans:2},
+      {q:'Output of print(2 ** 3)?',opts:['6','8','9','5'],ans:1},
+      {q:'Mode to open a file for appending?',opts:['r','w','a','x'],ans:2},
+      {q:'What does len("Hello") return?',opts:['4','5','6','Error'],ans:1},
+    ]},
+  { id:'q-bash', title:'Bash Bash-Off', desc:'How well do you know the shell?', icon:'💻', xp:80,
+    qs:[
+      {q:'Command to show current directory?',opts:['ls','pwd','cd','dir'],ans:1},
+      {q:'What does | (pipe) do?',opts:['Deletes output','Sends output to next command','Creates a file','Searches'],ans:1},
+      {q:'grep flag for case-insensitive search?',opts:['-r','-n','-i','-c'],ans:2},
+      {q:'What does set -e do?',opts:['Enables colours','Exits on any error','Sets variables','Enables verbose'],ans:1},
+    ]},
+];
+
+/* ═══════════════════════════════════════════
+   RENDER NAV
+═══════════════════════════════════════════ */
+function renderNav() {
+  const { lv, pct, inLv, max } = levelInfo(S.xp);
+  const nav = document.getElementById('navXP');
+  if (nav) nav.innerHTML = `
+    <div class="nav-level">Lv.${lv}</div>
+    <div class="xp-track"><div class="xp-fill" style="width:${pct}%"></div></div>
+    <div class="nav-xp-label">${inLv}/${max} XP</div>
+  `;
+  const ab = document.getElementById('ageToggle');
+  if (ab) {
+    ab.textContent = S.ageMode === 'junior' ? '👾 Ages 8–11' : '🎮 Ages 12–16';
+    ab.className = `age-badge ${S.ageMode}`;
+  }
+  document.body.setAttribute('data-age', S.ageMode);
+}
+
+document.getElementById('ageToggle')?.addEventListener('click', () => {
+  set(s => ({ ...s, ageMode: s.ageMode === 'junior' ? 'senior' : 'junior' }));
+  toast('🔄','Mode switched!', S.ageMode==='junior' ? 'Young Adventurer mode! 🌱' : 'Tech Explorer mode! ⚡');
+});
+
+document.getElementById('settingsBtn')?.addEventListener('click', () => {
+  showModal(`
+    <h2 style="font-family:var(--font-display);font-size:1.2rem;color:var(--gold);margin-bottom:24px">⚙️ Settings</h2>
+    <label style="font-weight:800;font-size:0.85rem;color:var(--text2);display:block;margin-bottom:8px">Your Nickname</label>
+    <input class="input mb-6" id="nickInput" placeholder="e.g. CoolCoder99" maxlength="20" value="${S.nickname}" />
+    <div class="flex gap-3 justify-between mt-4">
+      <button class="btn btn-ghost btn-sm" data-close>Cancel</button>
+      <button class="btn btn-lime btn-sm" id="saveNick">Save 💾</button>
+    </div>
+  `);
+  document.getElementById('saveNick')?.addEventListener('click', () => {
+    const v = document.getElementById('nickInput')?.value.trim() || 'Adventurer';
+    set(s => ({ ...s, nickname: v }));
+    closeModal();
+    toast('😎', `Hey, ${v}!`, 'Nickname saved locally only. No account needed!');
+  });
+});
+
+/* ═══════════════════════════════════════════
+   SCREENS
+═══════════════════════════════════════════ */
+
+/* ── HOME ── */
+function renderHome() {
+  return `<div class="page page-enter">
+    <section class="hero-section">
+      <div class="pixel-grid" aria-hidden="true"></div>
+      <div class="hero-badge" aria-label="Free. No account needed">✦ FREE · NO ACCOUNT NEEDED · KID-SAFE</div>
+      <h1 class="hero-title">
+        <span class="t-lime">Block</span><span class="t-cyan">Byte</span><br>Academy
+      </h1>
+      <p class="hero-sub">Learn IT, Python &amp; Bash like a game — earn XP, unlock badges, level up.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-lime btn-lg" onclick="go('/dashboard')">🚀 Start Your Quest</button>
+        <button class="btn btn-ghost btn-lg" onclick="go('/python')">🐍 Try Python Playground</button>
+      </div>
+      <div class="tracks-row">
+        <div class="track-card junior" onclick="selectTrack('junior')" role="button" tabindex="0" aria-label="Ages 8 to 11 Young Adventurer track">
+          <div class="track-orb">🌱</div>
+          <div class="track-title">Young Adventurer</div>
+          <div class="track-desc">Ages 8–11 · Visual · Friendly · Super fun</div>
+        </div>
+        <div class="track-card senior" onclick="selectTrack('senior')" role="button" tabindex="0" aria-label="Ages 12 to 16 Tech Explorer track">
+          <div class="track-orb">⚡</div>
+          <div class="track-title">Tech Explorer</div>
+          <div class="track-desc">Ages 12–16 · Deeper code · Real skills</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-hd mb-4">
+      <h2><span class="hd-dot"></span> Why BlockByte?</h2>
+    </div>
+    <div class="features-strip mb-10">
+      ${[['🎮','Game-Like Learning','Earn XP, unlock badges, and level up — just like your favourite game!'],
+         ['🔒','100% Private','No accounts. No data collected. All progress stays on your device.'],
+         ['💻','Real Skills','The same Python and Bash used by Netflix engineers and NASA scientists.'],
+         ['🛡️','Kid-Safe by Design','No chat, no public profiles, no ads. Just pure learning.']
+      ].map(([i,t,d]) => `<div class="feature-item"><div class="feature-icon">${i}</div><div class="feature-title">${t}</div><div class="feature-desc">${d}</div></div>`).join('')}
+    </div>
+
+    <div class="section-hd mb-4">
+      <h2><span class="hd-dot" style="background:var(--cyan)"></span> Learning Paths</h2>
+    </div>
+    <div class="paths-grid">
+      ${[
+        {cls:'it',num:'01',icon:'🖥️',title:'IT Basics',desc:'How computers work, networks, security, and fixing things when they break.',mods:['Hardware & CPU Fundamentals','Networking & The Internet','Cybersecurity Basics','Operating Systems','Troubleshooting Like a Pro'],link:'/lesson?id=it-01'},
+        {cls:'py',num:'02',icon:'🐍',title:'Python',desc:'From your first print() to loops, functions, and real programs.',mods:['Hello, Python!','Variables & Data Types','Loops & Decisions','Functions','Files & Real Projects'],link:'/python'},
+        {cls:'bash',num:'03',icon:'💻',title:'Bash & Terminal',desc:'Navigate like a hacker, automate like a pro, feel unstoppable.',mods:['The Terminal Awaits','Pipes & Power Tools','Write Your First Script','grep & Search','Automation Project'],link:'/terminal'},
+      ].map(p => `
+        <div class="path-card ${p.cls} card-hover" onclick="go('${p.link}')" role="link" tabindex="0" aria-label="${p.title}">
+          <div class="path-num">${p.num}</div>
+          <div class="path-icon">${p.icon}</div>
+          <div class="path-title">${p.title}</div>
+          <div class="path-desc">${p.desc}</div>
+          <div class="path-modules">${p.mods.map(m=>`<div class="path-module-item">${m}</div>`).join('')}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="text-center" style="padding:40px 0 20px">
+      <p style="color:var(--text3);margin-bottom:20px;font-weight:600">Ready to become a tech legend?</p>
+      <button class="btn btn-gold btn-lg" onclick="go('/dashboard')">⚔️ Enter the Academy</button>
+    </div>
+  </div>`;
+}
+
+function selectTrack(mode) {
+  set(s => ({ ...s, ageMode: mode }));
+  toast(mode==='junior'?'🌱':'⚡', mode==='junior'?'Young Adventurer!':'Tech Explorer!', 'Let\'s get learning! 🚀');
+  go('/dashboard');
+}
+window.selectTrack = selectTrack;
+
+/* ── DASHBOARD ── */
+function renderDashboard() {
+  const { lv, pct } = levelInfo(S.xp);
+  const total = MODULES.reduce((s,m)=>s+m.lessons.length,0);
+  return `<div class="page page-enter">
+    <div class="dash-welcome">
+      <div class="dash-welcome-text">
+        <h1>${greet()}, <span>${S.nickname}</span>! 👋</h1>
+        <p>${S.ageMode==='junior' ? "You're on a learning adventure! Keep going, explorer! 🌟" : "Your skills are levelling up. Keep building, developer! 💻"}</p>
+      </div>
+      <div class="dash-stats-row">
+        <div class="stat-pill"><span class="stat-pill-icon">⭐</span><div><div class="stat-pill-val gold">${S.xp}</div><div class="stat-pill-label">Total XP</div></div></div>
+        <div class="stat-pill"><span class="stat-pill-icon">🎮</span><div><div class="stat-pill-val lime">Lv.${lv}</div><div class="stat-pill-label">Level</div></div></div>
+        <div class="streak-widget"><span style="font-size:2rem">🔥</span><div><div class="streak-num">${S.streak}</div><div class="streak-label">Day Streak</div><div class="streak-dots">${Array(7).fill(0).map((_,i)=>`<div class="streak-dot ${i<(S.streak%7||S.streak>=7?S.streak%7||7:0)?'on':''}"></div>`).join('')}</div></div></div>
+      </div>
+    </div>
+
+    <!-- Module progress -->
+    <div class="module-progress-row mb-6">
+      ${MODULES.map(m => {
+        const done = m.lessons.filter(l=>S.completed.includes(l.id)).length;
+        const pct = Math.round((done/m.lessons.length)*100);
+        return `<div class="module-prog-card" onclick="scrollToModule('${m.id}')">
+          <div class="module-prog-header">
+            <span class="module-prog-name" style="color:${m.color}">${m.icon} ${m.name}</span>
+            <span class="module-prog-pct">${pct}%</span>
+          </div>
+          <div class="prog-bar"><div class="prog-bar-fill" style="background:${m.fillCss};width:${pct}%"></div></div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-row" role="tablist">
+      ${[['quests','⚔️ Quests'],['badges','🏆 Badges'],['stats','📊 Stats']].map((t,i)=>
+        `<button class="tab${i===0?' active':''}" role="tab" data-tab="${t[0]}" aria-selected="${i===0}">${t[1]}</button>`
+      ).join('')}
+    </div>
+    <div id="tabContent"></div>
+  </div>`;
+}
+
+function mountDashTabs(container) {
+  renderTab('quests', container);
+  container.querySelectorAll('[data-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      container.querySelectorAll('[data-tab]').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+      renderTab(btn.dataset.tab, container);
+    });
+  });
+}
+
+function renderTab(tab, container) {
+  const tc = container.querySelector('#tabContent');
+  if (!tc) return;
+  if (tab === 'quests') {
+    tc.innerHTML = MODULES.map(m => `
+      <div id="mod-${m.id}" class="mb-8">
+        <div class="section-hd mb-4">
+          <h2 style="font-size:1.1rem"><span class="hd-dot" style="background:${m.color}"></span>${m.icon} ${m.name}</h2>
+          <span class="pill pill-lime">${m.lessons.filter(l=>S.completed.includes(l.id)).length}/${m.lessons.length} done</span>
+        </div>
+        <div class="quests-grid">
+          ${m.lessons.map((l,i) => {
+            const done = S.completed.includes(l.id);
+            const locked = i > 0 && !S.completed.includes(m.lessons[i-1].id);
+            const status = done ? 'done' : locked ? 'locked' : 'open';
+            return `<div class="quest-card quest-${status}" style="--qc:${m.color}" ${!locked?'data-link="/lesson?id='+l.id+'" tabindex="0" role="link"':''} aria-label="${l.title}${locked?' (locked)':done?' (completed)':''}">
+              <span class="quest-icon">${m.icon}</span>
+              <div class="quest-module">${m.name}</div>
+              <div class="quest-title">${l.title}</div>
+              <div class="quest-footer">
+                <span class="quest-xp">⭐ ${l.xp} XP</span>
+                ${done?'<span class="pill pill-green">✅ Done</span>':locked?'<span class="pill pill-red">🔒 Locked</span>':'<span class="pill pill-cyan">▶ Start</span>'}
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    `).join('') + `
+    <div class="mb-8">
+      <div class="section-hd mb-4"><h2><span class="hd-dot" style="background:var(--pink)"></span>📝 Quiz Arena</h2></div>
+      <div class="quests-grid">
+        ${QUIZZES.map(q => `
+          <div class="quest-card" style="--qc:var(--pink)" data-link="/quiz?id=${q.id}" tabindex="0" role="link" aria-label="${q.title} quiz">
+            <span class="quest-icon">${q.icon}</span>
+            <div class="quest-module">QUIZ CHALLENGE</div>
+            <div class="quest-title">${q.title}</div>
+            <div class="quest-footer"><span class="quest-xp">⭐ ${q.xp} XP</span><span class="pill pill-lime">${q.qs.length}Q</span></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+
+    tc.querySelectorAll('[data-link]').forEach(el => {
+      el.addEventListener('click', () => go(el.dataset.link));
+      el.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') go(el.dataset.link); });
+    });
+  }
+  else if (tab === 'badges') {
+    const BADGES = [
+      {id:'first_lesson',icon:'🌱',name:'First Step'},{id:'it_done',icon:'🖥️',name:'IT Pro'},
+      {id:'python_hello',icon:'🐍',name:'Snake Charmer'},{id:'bash_wizard',icon:'💻',name:'Bash Wizard'},
+      {id:'streak_7',icon:'🔥',name:'7-Day Streak'},{id:'quiz_ace',icon:'🎯',name:'Quiz Ace'},
+      {id:'level_5',icon:'⚡',name:'Level 5 Hero'},{id:'explorer',icon:'🗺️',name:'Explorer'},
+      {id:'debugger',icon:'🐛',name:'Bug Squasher'},{id:'diamond',icon:'💎',name:'Diamond Coder'},
+    ];
+    tc.innerHTML = `<p style="color:var(--text3);font-size:0.85rem;margin-bottom:20px;font-weight:600">${S.badges.length===0?'Complete lessons to earn your first badge!':S.badges.length+' badge'+( S.badges.length!==1?'s':'')+' earned — you\'re on a roll!'}</p>
+    <div class="badges-grid">${BADGES.map(b=>`<div class="badge-tile ${S.badges.includes(b.id)?'earned':'locked'}"><span class="badge-icon">${b.icon}</span><span class="badge-name">${b.name}</span></div>`).join('')}</div>`;
+  }
+  else {
+    const { lv, pct, inLv, max } = levelInfo(S.xp);
+    tc.innerHTML = `<div class="parent-grid">
+      ${[['⭐',S.xp,'Total XP','var(--gold)'],['🎮',`Lv.${lv}`,'Level','var(--lime)'],['✅',S.completed.length,'Lessons','var(--green)'],['🔥',S.streak+' days','Streak','#ff6b35'],['🏆',S.badges.length,'Badges','var(--cyan)'],['📝',Object.keys(S.quizScores).length,'Quizzes','var(--violet)']].map(([i,v,l,c])=>`<div class="parent-stat"><div class="parent-stat-val" style="color:${c}">${v}</div><div style="font-size:1.4rem">${i}</div><div class="parent-stat-lbl">${l}</div></div>`).join('')}
+    </div>
+    <div class="card mb-4">
+      <div class="flex justify-between mb-2"><span style="font-weight:800;font-size:0.85rem">Level ${lv} → ${lv+1}</span><span style="font-size:0.8rem;color:var(--text3)">${inLv}/${max} XP</span></div>
+      <div class="prog-bar"><div class="prog-bar-fill" style="background:linear-gradient(90deg,var(--gold-d),var(--gold));width:${pct}%"></div></div>
+    </div>`;
+  }
+}
+
+function greet() {
+  const h = new Date().getHours();
+  return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+}
+window.scrollToModule = id => document.getElementById(`mod-${id}`)?.scrollIntoView({behavior:'smooth',block:'start'});
+
+// Registry for code snippets keyed by string — avoids btoa/atob unicode issues
+const _codeRegistry = {};
+
+/* ── LESSON ── */
+function renderLesson() {
+  const id = getParam('id');
+  const mod = MODULES.find(m => m.lessons.some(l => l.id === id));
+  const lesson = mod?.lessons.find(l => l.id === id);
+  if (!lesson) return '<div class="page"><div class="empty-state"><div class="empty-icon">😕</div><p>Lesson not found</p><button class="btn btn-ghost mt-4" onclick="go(\'/dashboard\')">← Dashboard</button></div></div>';
+
+  const content = lesson[S.ageMode] || lesson.jr;
+  const done = S.completed.includes(id);
+  const midx = mod.lessons.indexOf(lesson);
+  const prev = mod.lessons[midx-1];
+  const next = mod.lessons[midx+1] || MODULES[MODULES.indexOf(mod)+1]?.lessons[0];
+
+  return `<div class="page page-enter">
+    <div class="lesson-layout">
+      <div class="lesson-main">
+        <div class="lesson-breadcrumb">
+          <a href="#/dashboard" onclick="go('/dashboard');return false">Dashboard</a>
+          <span class="sep">›</span>
+          <span style="color:${mod.color}">${mod.icon} ${mod.name}</span>
+          <span class="sep">›</span>
+          <span style="color:var(--text2)">${lesson.title}</span>
+          ${done?'<span class="pill pill-green ml-2">✅ Complete</span>':`<span class="pill pill-gold">⭐ ${lesson.xp} XP</span>`}
+        </div>
+
+        <div class="lesson-hero">
+          <div class="lesson-hero-meta mb-3">
+            <span class="pill" style="background:rgba(255,255,255,0.05);color:${mod.color};border:1px solid ${mod.color}40">${mod.icon} ${mod.name}</span>
+            ${S.ageMode==='junior'?'<span class="pill pill-gold">👾 Young Adventurer</span>':'<span class="pill pill-cyan">⚡ Tech Explorer</span>'}
+          </div>
+          <h1>${lesson.title}</h1>
+          <div class="info-callout mt-4"><strong>🎯 Mission: </strong>${content.intro}</div>
+        </div>
+
+        <div class="lesson-content-body" id="lessonBody">
+          ${content.sections.map((sec,i)=>{
+            let pgBtn = '';
+            if (sec.code) {
+              const regKey = `pg_${mod.id}_${i}`;
+              _codeRegistry[regKey] = sec.code;
+              pgBtn = `<div class="code-block-actions"><button class="btn btn-cyan btn-sm" onclick="tryPlayground('${mod.id}','${regKey}')">▶ Try in Playground</button></div>`;
+            }
+            return `
+            <div style="animation:fadeSlideUp 0.4s ${i*0.1}s both">
+              <h2>${sec.h}</h2>
+              <p>${sec.p}</p>
+              ${sec.code ? `<div class="code-block">
+                <div class="code-block-head"><span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span><span class="code-block-lang">${mod.id==='bash'?'bash':mod.id==='py'?'python':'shell'}</span></div>
+                <pre>${escHtml(sec.code)}</pre>
+                ${pgBtn}
+              </div>` : ''}
+            </div>`;
+          }).join('')}
+          <div class="fact-callout"><strong>🧠 BlockByte Brain Boost! </strong>${content.fact}</div>
+        </div>
+
+        <!-- Hint -->
+        <div class="hint-drawer mt-4">
+          <button class="hint-trigger" id="hintTrig" onclick="toggleHint()">💡 ${S.ageMode==='junior'?'Need a clue? Tap for a hint!':'Show hint'}<span class="hint-arrow">▼</span></button>
+          <div class="hint-body" id="hintBody">
+            <strong>Key concept:</strong> ${content.sections[0]?.h} — ${content.intro.split('.')[0]}. Re-read the section if you're stuck!
+          </div>
+        </div>
+
+        <!-- Checkpoint -->
+        <div class="checkpoint-card mt-6" id="checkpoint">
+          <div class="checkpoint-label">🎯 Checkpoint Quiz</div>
+          <div id="cpContent">${renderCP(content.cp, id, done)}</div>
+        </div>
+
+        <!-- Nav -->
+        <div class="flex justify-between mt-8 gap-4" style="flex-wrap:wrap">
+          ${prev?`<button class="btn btn-ghost" onclick="go('/lesson?id=${prev.id}')">← ${prev.title}</button>`:'<div></div>'}
+          ${next?`<button class="btn btn-lime" id="nextBtn" ${!done?'disabled':''} onclick="go('/lesson?id=${next.id}')">${next.title} →</button>`:`<button class="btn btn-gold" onclick="go('/dashboard')">🏆 Back to Dashboard!</button>`}
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="lesson-sidebar">
+        <div class="sidebar-card">
+          <h3>📚 ${mod.name} Lessons</h3>
+          ${mod.lessons.map((l,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.82rem;font-weight:700;cursor:pointer;color:${l.id===id?mod.color:S.completed.includes(l.id)?'var(--green)':'var(--text3)'};" onclick="go('/lesson?id=${l.id}')">
+            <span>${S.completed.includes(l.id)?'✅':l.id===id?'▶':'○'}</span>${l.title}
+          </div>`).join('')}
+        </div>
+        <div class="sidebar-card">
+          <h3>⭐ XP Reward</h3>
+          <div style="font-family:var(--font-display);font-size:1.5rem;color:var(--gold);text-align:center;padding:8px 0">${done?'Claimed!':lesson.xp+' XP'}</div>
+        </div>
+        ${S.ageMode==='senior' ? `<div class="sidebar-card"><h3>⚡ Quick Reference</h3><div style="font-family:var(--font-code);font-size:0.75rem;color:var(--text3);line-height:1.8">${mod.id==='bash'?'ls, cd, pwd, cat\necho, mkdir, touch\ngrep, pipe |, >, >>':mod.id==='py'?'print()\nfor/while\nif/elif/else\ndef func():\nopen() with':'CPU, RAM, SSD\nOS, kernel\nTCP/IP, DNS\nOSI Model'}</div></div>` : ''}
+      </aside>
+    </div>
+  </div>`;
+}
+
+function renderCP(cp, lessonId, done) {
+  if (done) return `<div class="text-center" style="padding:24px"><div style="font-size:3rem;margin-bottom:12px">✅</div><div style="font-family:var(--font-display);color:var(--green);font-size:0.9rem">Lesson Complete!</div></div>`;
+  return `<div class="checkpoint-q">${cp.q}</div>
+    ${cp.opts.map((o,i)=>`<div class="quiz-opt" data-qi="${i}" data-lessonid="${lessonId}" data-ans="${cp.ans}" data-xp="${MODULES.flatMap(m=>m.lessons).find(l=>l.id===lessonId)?.xp||50}" data-fb="${escAttr(cp.fb)}" role="button" tabindex="0" aria-label="Option ${String.fromCharCode(65+i)}: ${o}"><span class="quiz-opt-key">${String.fromCharCode(65+i)}</span>${o}</div>`).join('')}
+    <div id="cpFeedback"></div>`;
+}
+
+function tryPlayground(modId, regKey) {
+  const code = _codeRegistry[regKey];
+  if (code) localStorage.setItem('bb_pg_code', code);
+  go(modId === 'bash' ? '/terminal' : '/python');
+}
+window.tryPlayground = tryPlayground;
+window.toggleHint = () => {
+  const b = document.getElementById('hintBody'), t = document.getElementById('hintTrig');
+  const open = b.classList.toggle('open');
+  t.classList.toggle('open', open);
+};
+
+/* checkpoint click delegation */
+document.addEventListener('click', e => {
+  const opt = e.target.closest('.quiz-opt');
+  if (!opt || !opt.dataset.qi) return;
+  const parent = opt.closest('#checkpoint');
+  if (!parent) return;
+  parent.querySelectorAll('.quiz-opt').forEach(o => o.style.pointerEvents='none');
+  const userAns = parseInt(opt.dataset.qi);
+  const correct = userAns === parseInt(opt.dataset.ans);
+  opt.classList.add(correct?'correct':'wrong');
+  if (!correct) parent.querySelectorAll('.quiz-opt')[parseInt(opt.dataset.ans)]?.classList.add('correct');
+  const fb = document.getElementById('cpFeedback');
+  fb.innerHTML = `<div style="margin-top:14px;padding:14px 18px;border-radius:var(--r-md);background:${correct?'rgba(46,213,115,0.08)':'rgba(255,71,87,0.08)'};border:1.5px solid ${correct?'var(--green)':'var(--red)'}">
+    <div style="font-weight:900;color:${correct?'var(--green)':'var(--red)'};margin-bottom:6px">${correct?'✅ Correct!':'❌ Not quite!'}</div>
+    <div style="font-size:0.85rem;color:var(--text3)">${opt.dataset.fb}</div>
+    ${correct?`<button class="btn btn-lime btn-sm mt-4" id="claimBtn">⭐ Claim ${opt.dataset.xp} XP!</button>`:`<button class="btn btn-ghost btn-sm mt-4" onclick="location.reload()">🔄 Try Again</button>`}
+  </div>`;
+  if (correct) {
+    document.getElementById('claimBtn')?.addEventListener('click', () => {
+      complete(opt.dataset.lessonid, parseInt(opt.dataset.xp));
+      document.getElementById('nextBtn')?.removeAttribute('disabled');
+      document.getElementById('cpContent').innerHTML = `<div class="text-center" style="padding:24px"><div style="font-size:3rem;margin-bottom:12px">✅</div><div style="font-family:var(--font-display);color:var(--green);font-size:0.9rem">Lesson Complete!</div></div>`;
+    });
+  }
+});
+
+/* ── TERMINAL ── */
+const CMDS = {
+  'pwd':()=>'/home/adventurer','ls':()=>'Documents  Downloads  scripts  hello.txt  notes.py',
+  'ls -la':()=>`total 48\ndrwxr-xr-x 5 adventurer adventurer 4096 Mar 01 12:00 .\ndrwxr-xr-x 3 root root 4096 Mar 01 09:00 ..\ndrwxr-xr-x 2 adventurer adventurer 4096 Mar 01 12:00 Documents\ndrwxr-xr-x 2 adventurer adventurer 4096 Mar 01 12:00 Downloads\ndrwxr-xr-x 2 adventurer adventurer 4096 Mar 01 12:00 scripts\n-rw-r--r-- 1 adventurer adventurer 42 Mar 01 12:00 hello.txt\n-rw-r--r-- 1 adventurer adventurer 128 Mar 01 12:00 notes.py`,
+  'cat hello.txt':()=>'Hello from BlockByte Academy!\nKeep learning, future developer! 🚀',
+  'cat notes.py':()=>'# My first Python script\nprint("Hello, World!")',
+  'date':()=>new Date().toString(),'whoami':()=>'adventurer','clear':()=>'__CLEAR__',
+  'help':()=>`Commands: pwd, ls, ls -la, cat [file], echo [text], mkdir [name], touch [file], date, whoami, grep [text] [file], wc -w [file], clear, help`,
+  'mkdir':args=>args?`Created: ${args}`:'mkdir: missing operand',
+  'touch':args=>args?`Created: ${args}`:'touch: missing operand',
+  'echo':args=>args||'',
+  'grep':args=>{const[p,f]=args?.split(' ')??[];return f==='hello.txt'&&'Hello from BlockByte Academy!'.toLowerCase().includes(p?.toLowerCase())?'Hello from BlockByte Academy!':`grep: no match for '${p||'?'}'`},
+  'wc -w':args=>args==='hello.txt'?'7 hello.txt':'wc: no such file',
+};
+const TERM_CHALLENGES = [
+  {id:'t1',title:'📍 Where Am I?',desc:'Use the right command to find your current directory.',hint:'It stands for "Print Working Directory" — 3 letters!',xp:20,v:(c,o)=>c.trim()==='pwd'&&o.includes('/')},
+  {id:'t2',title:'📂 List the Files',desc:'List all files in the current directory.',hint:'Short for "list" — just 2 letters!',xp:20,v:(c,o)=>c.trim().startsWith('ls')&&o.includes('hello.txt')},
+  {id:'t3',title:'👀 Read a File',desc:'Read the contents of hello.txt.',hint:'cat [filename] — con-CAT-enates file contents to screen!',xp:25,v:(c,o)=>c.includes('cat')&&c.includes('hello.txt')&&o.includes('BlockByte')},
+  {id:'t4',title:'📁 Make a Folder',desc:'Create a new directory called "my_scripts".',hint:'mkdir stands for "make directory"',xp:25,v:(c,o)=>c.includes('mkdir')&&c.includes('my_scripts')&&o.includes('Created')},
+  {id:'t5',title:'📢 Say Something',desc:'Use echo to print "Hello BlockByte" to the screen.',hint:'echo "Hello BlockByte"',xp:20,v:(c,o)=>c.startsWith('echo')&&o.toLowerCase().includes('hello')},
+];
+
+function renderTerminal() {
+  const done = JSON.parse(localStorage.getItem('bb_term')||'[]');
+  return `<div class="page page-enter">
+    <div class="flex items-center gap-3 mb-6" style="flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" onclick="go('/dashboard')">← Dashboard</button>
+      <h1 style="font-family:var(--font-display);font-size:1.1rem;color:var(--lime)">💻 Bash Terminal Trainer</h1>
+      <span class="pill pill-lime">${done.length}/${TERM_CHALLENGES.length} Missions</span>
+    </div>
+    <div class="grid-2 gap-4" style="align-items:start">
+      <div>
+        <div class="terminal-wrap" id="termWrap">
+          <div class="terminal-bar">
+            <span class="t-dot r"></span><span class="t-dot y"></span><span class="t-dot g"></span>
+            <span class="t-title">adventurer@blockbyte:~$</span>
+            <span class="t-mock-label">SIMULATED TERMINAL</span>
+          </div>
+          <div class="terminal-output" id="tOut" role="log" aria-live="polite">
+            <span class="tl tl-info">🎮 Welcome to BlockByte Terminal Trainer!</span>
+            <span class="tl tl-info">${S.ageMode==='junior'?'Type commands and hit Enter — it\'s safe here!':'Simulated Bash shell. Type \'help\' for commands.'}</span>
+            <span class="tl tl-info">Type <span style="color:var(--gold)">help</span> for all commands.</span>
+            <span class="tl" style="color:rgba(255,255,255,0.1)">───────────────────────</span>
+          </div>
+          <div class="terminal-input-row">
+            <span class="t-prompt">adventurer@blockbyte:~$</span>
+            <input class="t-input" id="tIn" placeholder="type a command..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Terminal input"/>
+            <button class="t-run" id="tRun" aria-label="Run">▶ Run</button>
+          </div>
+          <div class="t-chips">
+            ${['ls','pwd','cat hello.txt','whoami','date','help'].map(c=>`<button class="t-chip" onclick="insertCmd('${c}')">${c}</button>`).join('')}
+          </div>
+        </div>
+        <div class="hint-drawer mt-4" id="termHint">
+          <button class="hint-trigger" onclick="toggleTermHint()">💡 Hint for current mission<span class="hint-arrow">▼</span></button>
+          <div class="hint-body" id="termHintBody">Select a mission to get a hint →</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-hd mb-4"><h2 style="font-size:1rem"><span class="hd-dot"></span> Terminal Missions</h2></div>
+        ${TERM_CHALLENGES.map((ch,i)=>{
+          const isDone = done.includes(ch.id);
+          return `<div class="card card-hover mb-3" style="border-left:3px solid ${isDone?'var(--green)':'var(--lime)'}" data-ch="${i}">
+            <div class="flex items-center gap-3">
+              <span style="font-size:1.4rem">${isDone?'✅':'▶'}</span>
+              <div style="flex:1"><div style="font-weight:900;font-size:0.88rem">${ch.title}</div><div style="font-size:0.78rem;color:var(--text3);margin-top:2px">${ch.desc}</div></div>
+              <span style="font-size:0.75rem;color:var(--gold);font-weight:800">${ch.xp} XP</span>
+            </div>
+          </div>`;
+        }).join('')}
+        <div class="card mt-4">
+          <div class="flex justify-between mb-2 items-center"><span style="font-weight:800;font-size:0.85rem">🏆 Progress</span><span style="color:var(--text3);font-size:0.8rem">${done.length}/${TERM_CHALLENGES.length}</span></div>
+          <div class="prog-bar"><div class="prog-bar-fill" style="background:linear-gradient(90deg,var(--lime-d),var(--lime));width:${Math.round(done.length/TERM_CHALLENGES.length*100)}%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function mountTerminal(container) {
+  let currentCh = null, hist = [], hi = -1;
+  const tOut = container.querySelector('#tOut');
+  const tIn = container.querySelector('#tIn');
+  const done = () => JSON.parse(localStorage.getItem('bb_term')||'[]');
+
+  function addLine(type, text) {
+    text.split('\n').forEach(line => {
+      const el = document.createElement('span');
+      el.className = `tl tl-${type}`;
+      el.textContent = line;
+      tOut.appendChild(el);
+    });
+    tOut.scrollTop = tOut.scrollHeight;
+  }
+
+  function run() {
+    const raw = tIn.value.trim(); if (!raw) return;
+    hist.unshift(raw); hi = -1; tIn.value = '';
+    addLine('cmd', raw);
+    const parts = raw.split(' '), cmd = parts[0], args = parts.slice(1).join(' ');
+    const handler = CMDS[raw] || CMDS[cmd];
+    let out = '', err = false;
+    if (handler) { out = handler(args); if (out==='__CLEAR__') { tOut.innerHTML=''; addLine('info','Screen cleared!'); return; } }
+    else if (cmd==='echo') out = args;
+    else { out = `bash: ${cmd}: command not found\nType 'help' to see commands.`; err = true; }
+    addLine(err?'err':'out', out);
+    if (currentCh && !done().includes(currentCh.id) && currentCh.v(raw, out)) {
+      const d = done(); d.push(currentCh.id); localStorage.setItem('bb_term', JSON.stringify(d));
+      addLine('info', `🎉 Mission "${currentCh.title}" complete! +${currentCh.xp} XP!`);
+      awardXP(currentCh.xp, `Terminal mission: ${currentCh.title}`);
+    }
+  }
+
+  container.querySelector('#tRun')?.addEventListener('click', run);
+  tIn?.addEventListener('keydown', e => {
+    if (e.key==='Enter') { run(); return; }
+    if (e.key==='ArrowUp') { e.preventDefault(); if (hi<hist.length-1) { hi++; tIn.value=hist[hi]; } }
+    if (e.key==='ArrowDown') { e.preventDefault(); if (hi>0){hi--;tIn.value=hist[hi];}else{hi=-1;tIn.value='';} }
+  });
+
+  container.querySelectorAll('[data-ch]').forEach(el => {
+    el.addEventListener('click', () => {
+      currentCh = TERM_CHALLENGES[parseInt(el.dataset.ch)];
+      container.querySelectorAll('[data-ch]').forEach(c=>c.style.borderLeftColor='');
+      el.style.borderLeftColor = 'var(--gold)';
+      const hb = container.querySelector('#termHintBody');
+      if (hb) { hb.innerHTML = `<strong>💡 Hint:</strong> ${currentCh.hint}`; hb.classList.add('open'); }
+      const ht = container.querySelector('.hint-trigger');
+      if (ht) ht.classList.add('open');
+      addLine('info', `📋 Mission: ${currentCh.desc}`);
+    });
+  });
+
+  window.insertCmd = cmd => { if (tIn) { tIn.value = cmd; tIn.focus(); } };
+  window.toggleTermHint = () => { const b = container.querySelector('#termHintBody'), t = container.querySelector('#termHint .hint-trigger'); b?.classList.toggle('open'); t?.classList.toggle('open'); };
+  setTimeout(() => tIn?.focus(), 100);
+}
+
+/* ── PYTHON ── */
+function simPython(code) {
+  const lines = [], vars = {};
+  try {
+    const codeLines = code.split('\n'); let i = 0;
+    const evalExpr = expr => {
+      expr = expr.trim();
+      const fm = expr.match(/^f["'](.*?)["']$/);
+      if (fm) return fm[1].replace(/\{([^}]+)\}/g,(_,k)=>{ const v=vars[k.trim()]; return v!==undefined?String(v):k; });
+      const sm = expr.match(/^["'](.*?)["']$/); if (sm) return sm[1];
+      if (!isNaN(expr)) return Number(expr);
+      if (vars[expr]!==undefined) return vars[expr];
+      try { return Function('"use strict";return('+expr.replace(/[^0-9+\-*/.()\s]/g,'')+')')(); } catch { return expr; }
+    };
+    while (i < codeLines.length) {
+      const line = codeLines[i], trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) { i++; continue; }
+      const pm = trimmed.match(/^print\((.*)\)$/);
+      if (pm) { lines.push(String(evalExpr(pm[1]))); i++; continue; }
+      const fm = trimmed.match(/^for\s+(\w+)\s+in\s+range\((.+)\)\s*:$/);
+      if (fm) {
+        const vn=fm[1], ra=fm[2].split(',').map(a=>parseInt(evalExpr(a.trim())));
+        const [start,end,step]=ra.length===1?[0,ra[0],1]:ra.length===2?[ra[0],ra[1],1]:ra;
+        const body=[]; i++;
+        while(i<codeLines.length&&(codeLines[i].startsWith('    ')||codeLines[i].startsWith('\t'))){body.push(codeLines[i]);i++;}
+        for(let v=start;v<end&&lines.length<100;v+=step){vars[vn]=v;body.forEach(bl=>{const bt=bl.trim();const bpm=bt.match(/^print\((.*)\)$/);if(bpm)lines.push(String(evalExpr(bpm[1])));})}
+        continue;
+      }
+      const am = trimmed.match(/^([a-zA-Z_]\w*)\s*=\s*(.+)$/);
+      if (am && !trimmed.includes('def ')) { vars[am[1]]=evalExpr(am[2]); i++; continue; }
+      i++;
+    }
+    return { out: lines.join('\n')||(lines.length?lines.join('\n'):'(no output)'), err: false };
+  } catch(e) { return { out: `Error: ${e.message}`, err: true }; }
+}
+
+const PY_CHALLENGES = [
+  {id:'pc1',title:'Say Hello!',xp:15,desc:'Print "Hello, World!" using print().',hint:'print("Hello, World!")',start:'print("Hello, World!")',v:(c,o)=>o.toLowerCase().includes('hello')},
+  {id:'pc2',title:'Make a Variable',xp:20,desc:'Create a variable name and print it.',hint:'name = "Alex"\nprint(name)',start:'name = "BlockByte"\nprint(name)',v:(c,o)=>c.includes('=')&&o.length>0},
+  {id:'pc3',title:'Count to 5!',xp:25,desc:'Use a for loop to print 1 through 5.',hint:'for i in range(1, 6):\n    print(i)',start:'for i in range(1, 6):\n    print(i)',v:(c,o)=>c.includes('for')&&o.includes('5')},
+  {id:'pc4',title:'Write a Function',xp:30,desc:'Write greet(name) that prints "Hello, [name]!"',hint:'def greet(name):\n    print(f"Hello, {name}!")',start:'def greet(name):\n    print(f"Hello, {name}!")\n\ngreet("Coder")',v:(c,o)=>c.includes('def')&&o.includes('Hello')},
+];
+
+function renderPython() {
+  const saved = localStorage.getItem('bb_pg_code') || `# Welcome to the Python Playground! 🐍\n# Edit the code and click Run!\n\nname = "BlockByte Coder"\nprint(f"Hello, {name}!")\n\nfor i in range(1, 6):\n    print(f"Count: {i}")\n`;
+  const done = JSON.parse(localStorage.getItem('bb_py_ch')||'[]');
+  return `<div class="page page-enter">
+    <div class="flex items-center gap-3 mb-6" style="flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" onclick="go('/dashboard')">← Dashboard</button>
+      <h1 style="font-family:var(--font-display);font-size:1.1rem;color:var(--gold)">🐍 Python Playground</h1>
+      <span class="pill pill-cyan" title="This is a simplified Python simulator — not full Python execution">Simulated</span>
+    </div>
+    <div class="grid-2" style="align-items:start">
+      <div>
+        <div class="editor-wrap">
+          <div class="editor-bar">
+            <span class="t-dot r"></span><span class="t-dot y"></span><span class="t-dot g"></span>
+            <span class="editor-bar-title">🐍 Python Playground</span>
+            <span class="editor-bar-file">playground.py</span>
+          </div>
+          <div class="editor-area">
+            <div class="editor-gutter" id="edGutter" aria-hidden="true">${Array(saved.split('\n').length).fill(0).map((_,i)=>`<div>${i+1}</div>`).join('')}</div>
+            <textarea class="editor-textarea" id="pyCode" spellcheck="false" aria-label="Python code editor">${saved}</textarea>
+          </div>
+          <div class="editor-toolbar">
+            <button class="btn btn-cyan btn-sm" id="pyRun">▶ Run!</button>
+            <button class="btn btn-ghost btn-sm" id="pyClear">🗑 Clear Output</button>
+            <button class="btn btn-ghost btn-sm" id="pyReset">↩ Reset</button>
+            <span class="run-status" id="runStatus"></span>
+          </div>
+          <div class="editor-output" id="pyOut" aria-live="polite" aria-label="Code output"><span style="color:var(--text3)">Output appears here after clicking Run!</span></div>
+        </div>
+        <div class="hint-drawer mt-4">
+          <button class="hint-trigger" onclick="togglePyHint()">💡 Quick Python Reference<span class="hint-arrow">▼</span></button>
+          <div class="hint-body" id="pyHintBody" style="font-family:var(--font-code);font-size:0.8rem">
+            print("text") — show text<br>
+            x = 5 — variable<br>
+            for i in range(5): — loop<br>
+            if x > 3: / else: — conditional<br>
+            def func(): — function<br><br>
+            <em style="color:var(--text3)">Note: simplified simulator. For full Python try replit.com!</em>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-hd mb-4"><h2 style="font-size:1rem"><span class="hd-dot" style="background:var(--gold)"></span> Code Challenges</h2></div>
+        ${PY_CHALLENGES.map((ch,i)=>{
+          const isDone=done.includes(ch.id);
+          return `<div class="card card-hover mb-3" style="border-left:3px solid ${isDone?'var(--green)':'var(--gold)'}" data-pych="${i}">
+            <div class="flex items-center gap-3">
+              <span style="font-size:1.3rem">${isDone?'✅':i+1+'.'}</span>
+              <div style="flex:1"><div style="font-weight:900;font-size:0.88rem">${ch.title}</div><div style="font-size:0.78rem;color:var(--text3);margin-top:2px">${ch.desc}</div></div>
+              <span style="font-size:0.75rem;color:var(--gold);font-weight:800">${ch.xp} XP</span>
+            </div>
+          </div>`;
+        }).join('')}
+        <div class="card mt-4">
+          <div class="section-hd mb-3" style="margin-bottom:12px"><h3 style="font-size:0.82rem;color:var(--text3);font-weight:900;letter-spacing:0.06em;text-transform:uppercase">📋 Quick Snippets</h3></div>
+          ${(()=>{
+            const snips=[['Hello World','print("Hello, World!")'],['Variable','name = "Alex"\nprint(f"Hi {name}!")'],['For Loop','for i in range(5):\n    print(i)'],['Function','def add(a, b):\n    return a + b\n\nprint(add(3, 4))'],['If/Else','x = 10\nif x > 5:\n    print("Big!")\nelse:\n    print("Small!")']];
+            return snips.map(([l,c],si)=>{
+              const key=`snip_${si}`;
+              _codeRegistry[key]=c;
+              return `<button class="t-chip mb-2" style="font-family:var(--font-body);font-weight:700;text-align:left;width:100%;padding:7px 12px" onclick="loadSnippet('${key}')">${l}</button>`;
+            }).join('');
+          })()}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function mountPython(container) {
+  const codeEl = container.querySelector('#pyCode');
+  const gutter = container.querySelector('#edGutter');
+  const updateGutter = () => { gutter.innerHTML = Array(codeEl.value.split('\n').length).fill(0).map((_,i)=>`<div>${i+1}</div>`).join(''); };
+  codeEl?.addEventListener('input', updateGutter);
+  codeEl?.addEventListener('keydown', e => { if (e.key==='Tab') { e.preventDefault(); const s=codeEl.selectionStart; codeEl.value=codeEl.value.substring(0,s)+'    '+codeEl.value.substring(codeEl.selectionEnd); codeEl.selectionStart=codeEl.selectionEnd=s+4; updateGutter(); } });
+  const saved = localStorage.getItem('bb_pg_code') || '';
+  container.querySelector('#pyRun')?.addEventListener('click', () => {
+    const code = codeEl.value;
+    const status = container.querySelector('#runStatus');
+    const out = container.querySelector('#pyOut');
+    if (status) status.textContent = '⏳ Running...';
+    setTimeout(() => {
+      const { out: output, err } = simPython(code);
+      out.textContent = output; out.className = 'editor-output' + (err?' err':'');
+      if (status) status.textContent = err ? '❌ Error' : '✅ Done';
+      const done = JSON.parse(localStorage.getItem('bb_py_ch')||'[]');
+      PY_CHALLENGES.forEach(ch => {
+        if (!done.includes(ch.id) && ch.v(code, output)) {
+          done.push(ch.id); localStorage.setItem('bb_py_ch', JSON.stringify(done));
+          awardXP(ch.xp, `Python challenge: ${ch.title}`);
+        }
+      });
+      localStorage.setItem('bb_pg_code', code);
+    }, 280);
+  });
+  container.querySelector('#pyClear')?.addEventListener('click', () => { const o=container.querySelector('#pyOut'); if(o){o.textContent='';o.className='editor-output';} const s=container.querySelector('#runStatus'); if(s)s.textContent=''; });
+  container.querySelector('#pyReset')?.addEventListener('click', () => { codeEl.value = saved; updateGutter(); });
+  container.querySelectorAll('[data-pych]').forEach(el => {
+    el.addEventListener('click', () => {
+      const ch = PY_CHALLENGES[parseInt(el.dataset.pych)];
+      codeEl.value = ch.start; updateGutter(); toast('⚔️',`Challenge: ${ch.title}`,ch.desc); codeEl.focus();
+    });
+  });
+  window.loadSnippet = key => { const code=_codeRegistry[key]; if(code){codeEl.value=code;updateGutter();codeEl.focus();} };
+  window.togglePyHint = () => { const b=container.querySelector('#pyHintBody'),t=container.querySelector('.hint-trigger'); b?.classList.toggle('open'); t?.classList.toggle('open'); };
+}
+
+/* ── QUIZ ── */
+function renderQuiz() {
+  const id = getParam('id');
+  const quiz = QUIZZES.find(q=>q.id===id) || QUIZZES[0];
+  return `<div class="page page-enter" id="quizRoot" data-quiz="${quiz.id}" data-q="0" data-score="0">
+    <div class="flex items-center gap-3 mb-6">
+      <button class="btn btn-ghost btn-sm" onclick="go('/dashboard')">← Dashboard</button>
+      <h1 style="font-family:var(--font-display);font-size:1rem;color:var(--pink)">${quiz.icon} ${quiz.title}</h1>
+    </div>
+    <div class="quiz-layout" id="quizBody"></div>
+  </div>`;
+}
+
+function mountQuiz(container) {
+  const root = container.querySelector('#quizRoot');
+  const body = container.querySelector('#quizBody');
+  let q = 0, score = 0;
+  const quiz = QUIZZES.find(qz=>qz.id===root.dataset.quiz)||QUIZZES[0];
+
+  function showQ() {
+    if (q >= quiz.qs.length) { showResults(); return; }
+    const pct = Math.round(q/quiz.qs.length*100);
+    body.innerHTML = `
+      <div class="quiz-prog"><span class="pill pill-cyan">Q${q+1}/${quiz.qs.length}</span><div class="quiz-prog-bar"><div class="quiz-prog-fill" style="width:${pct}%"></div></div><span class="pill pill-gold">⭐ ${score*20} pts</span></div>
+      <div class="quiz-card">
+        <div class="quiz-q-text">${quiz.qs[q].q}</div>
+        ${quiz.qs[q].opts.map((o,i)=>`<div class="quiz-opt" data-i="${i}" role="button" tabindex="0" aria-label="${String.fromCharCode(65+i)}: ${o}"><span class="quiz-opt-key">${String.fromCharCode(65+i)}</span>${o}</div>`).join('')}
+        <div id="qFb"></div>
+      </div>`;
+    body.querySelectorAll('.quiz-opt').forEach(opt => {
+      const handler = () => {
+        body.querySelectorAll('.quiz-opt').forEach(o=>o.style.pointerEvents='none');
+        const correct = parseInt(opt.dataset.i)===quiz.qs[q].ans;
+        if (correct) score++;
+        opt.classList.add(correct?'correct':'wrong');
+        if (!correct) body.querySelectorAll('.quiz-opt')[quiz.qs[q].ans]?.classList.add('correct');
+        const fb = document.getElementById('qFb');
+        fb.innerHTML = `<div style="margin-top:14px;padding:14px;border-radius:var(--r-md);background:${correct?'rgba(46,213,115,0.08)':'rgba(255,71,87,0.08)'};border:1.5px solid ${correct?'var(--green)':'var(--red)'}">
+          <strong style="color:${correct?'var(--green)':'var(--red)'}">${correct?'✅ Correct!':'❌ Not quite!'}</strong>
+          <button class="btn btn-${correct?'lime':'ghost'} btn-sm mt-4" id="nxtBtn">${q+1<quiz.qs.length?'Next →':'See Results! 🏆'}</button>
+        </div>`;
+        document.getElementById('nxtBtn')?.addEventListener('click', () => { q++; showQ(); });
+      };
+      opt.addEventListener('click', handler);
+      opt.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') handler(); });
+    });
+  }
+
+  function showResults() {
+    const pct = Math.round(score/quiz.qs.length*100);
+    const grade = pct>=80?{e:'🏆',t:'Amazing!',c:'var(--gold)'}:pct>=60?{e:'🎉',t:'Great job!',c:'var(--green)'}:{e:'💪',t:'Keep going!',c:'var(--cyan)'};
+    awardXP(score*20, `Quiz: ${quiz.title}`);
+    const prev = S.quizScores?.[quiz.id]||0;
+    if (score>prev) set(s => ({ ...s, quizScores:{...s.quizScores,[quiz.id]:score} }));
+    body.innerHTML = `<div class="text-center" style="padding:40px 0">
+      <div style="font-size:5rem;margin-bottom:16px">${grade.e}</div>
+      <div style="font-family:var(--font-display);font-size:1.5rem;color:${grade.c};margin-bottom:8px">${grade.t}</div>
+      <div style="font-family:var(--font-display);font-size:2.5rem;color:var(--gold);margin-bottom:8px">${score}/${quiz.qs.length}</div>
+      <p style="color:var(--text3);margin-bottom:28px">${pct}% correct · +${score*20} XP earned</p>
+      <div class="flex gap-3 justify-center" style="flex-wrap:wrap">
+        <button class="btn btn-lime" onclick="go('/quiz?id=${quiz.id}')">🔄 Play Again</button>
+        <button class="btn btn-ghost" onclick="go('/dashboard')">← Dashboard</button>
+      </div>
+    </div>`;
+  }
+  showQ();
+}
+
+/* ── PARENT ── */
+function renderParent() {
+  const total = MODULES.reduce((s,m)=>s+m.lessons.length,0);
+  const { lv, pct, inLv, max } = levelInfo(S.xp);
+  return `<div class="page page-enter">
+    <div class="flex items-center gap-3 mb-6" style="flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" onclick="go('/')">← Back</button>
+      <h1 style="font-family:var(--font-display);font-size:1rem;color:var(--cyan)">👨‍👩‍👧 Parent &amp; Teacher View</h1>
+      <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 Print Report</button>
+    </div>
+    <div class="info-callout mb-6"><strong>🔒 Privacy:</strong> All progress is stored locally on this device only. No accounts, no servers, no personal data collected.</div>
+
+    <div class="parent-grid mb-6">
+      ${[['⭐',S.xp,'Total XP','var(--gold)'],['🎮',`Lv.${lv}`,'Level','var(--lime)'],['✅',`${S.completed.length}/${total}`,'Lessons','var(--green)'],['🔥',`${S.streak}d`,'Streak','#ff6b35'],['🏆',S.badges.length,'Badges','var(--cyan)'],['📝',Object.keys(S.quizScores).length,'Quizzes','var(--violet)']].map(([i,v,l,c])=>`<div class="parent-stat"><div class="parent-stat-val" style="color:${c}">${v}</div><div style="font-size:1.6rem">${i}</div><div class="parent-stat-lbl">${l}</div></div>`).join('')}
+    </div>
+
+    <div class="card mb-6">
+      <h2 style="font-weight:900;margin-bottom:20px;font-size:1rem">📊 Curriculum Progress</h2>
+      ${MODULES.map(m => {
+        const done = m.lessons.filter(l=>S.completed.includes(l.id)).length;
+        const p = Math.round(done/m.lessons.length*100);
+        return `<div class="mb-4">
+          <div class="flex justify-between mb-2" style="font-size:0.85rem;font-weight:800"><span style="color:${m.color}">${m.icon} ${m.name}</span><span style="color:var(--text3)">${done}/${m.lessons.length} (${p}%)</span></div>
+          <div class="prog-bar"><div class="prog-bar-fill" style="background:${m.fillCss};width:${p}%"></div></div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <div class="card mb-6">
+      <h2 style="font-weight:900;margin-bottom:20px;font-size:1rem">📚 Lesson Breakdown</h2>
+      ${MODULES.map(m => `
+        <div class="mb-5">
+          <div style="font-weight:900;font-size:0.88rem;color:${m.color};margin-bottom:10px">${m.icon} ${m.name}</div>
+          ${m.lessons.map(l=>`<div class="flex items-center gap-3" style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.82rem"><span>${S.completed.includes(l.id)?'✅':'⬜'}</span><span style="flex:1;font-weight:${S.completed.includes(l.id)?'800':'600'};color:${S.completed.includes(l.id)?'var(--text1)':'var(--text3)'}">${l.title}</span><span style="font-size:0.72rem;color:var(--gold)">${S.completed.includes(l.id)?'+'+l.xp+' XP':''}</span></div>`).join('')}
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="card mb-6">
+      <h2 style="font-weight:900;margin-bottom:16px;font-size:1rem">🛡️ Safety Features</h2>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${['No user accounts or sign-ups required','No user-to-user communication','No personal data collected or transmitted','All progress stored locally on device only','No advertisements or in-app purchases','Age-appropriate dual-track content','Streak system designed to avoid guilt messaging','Kid-safe content reviewed for all age groups'].map(t=>`<div class="flex items-center gap-3" style="font-size:0.85rem;font-weight:600;color:var(--text2)"><span style="color:var(--green)">✅</span>${t}</div>`).join('')}
+      </div>
+    </div>
+
+    <div class="card" style="border-color:rgba(255,71,87,0.2)">
+      <h2 style="font-weight:900;margin-bottom:10px;font-size:1rem;color:var(--red)">⚠️ Reset Progress</h2>
+      <p style="font-size:0.85rem;color:var(--text3);margin-bottom:16px;font-weight:600">Permanently deletes all locally stored progress. Cannot be undone.</p>
+      <button class="btn btn-sm" style="background:rgba(255,71,87,0.1);border:1.5px solid rgba(255,71,87,0.3);color:var(--red)" id="resetBtn">🗑 Reset All Progress</button>
+    </div>
+  </div>`;
+}
+
+function mountParent(container) {
+  container.querySelector('#resetBtn')?.addEventListener('click', () => {
+    if (confirm('Delete all progress? This cannot be undone.')) {
+      ['bb_state','bb_term','bb_py_ch','bb_pg_code'].forEach(k=>localStorage.removeItem(k));
+      location.reload();
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════
+   ROUTER
+═══════════════════════════════════════════ */
+function escHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(t) { return t.replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+const ROUTES = {
+  '/': () => [renderHome(), null],
+  '/dashboard': () => [renderDashboard(), mountDashTabs],
+  '/lesson': () => [renderLesson(), null],
+  '/terminal': () => [renderTerminal(), mountTerminal],
+  '/python': () => [renderPython(), mountPython],
+  '/quiz': () => [renderQuiz(), mountQuiz],
+  '/parent': () => [renderParent(), mountParent],
+};
+
+function route() {
+  const path = getHash().split('?')[0];
+  const app = document.getElementById('app');
+  const handler = ROUTES[path] || ROUTES['/'];
+  const [html, mounter] = handler();
+  app.innerHTML = html;
+  if (mounter) mounter(app);
+  app.querySelectorAll('[onclick]'); // delegated already
+  app.focus();
+  renderNav();
+  // Update streak on visit
+  const today = new Date().toDateString();
+  if (S.lastActive !== today) {
+    const yest = new Date(Date.now()-86400000).toDateString();
+    set(s => ({ ...s, streak: s.lastActive===yest?s.streak+1:1, lastActive:today }));
+  }
+}
+
+window.go = go;
+window.addEventListener('hashchange', route);
+renderNav();
+route();
+</script>
 </body>
 </html>
+
